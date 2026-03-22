@@ -1,0 +1,271 @@
+﻿
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Harison | Associate Software Developer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Sora:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config={theme:{extend:{colors:{brand:'#ffd600',dark:'#0a0a0a',muted:'#8e8e8e'},fontFamily:{body:['Sora','sans-serif'],display:['Bebas Neue','sans-serif']}}}};
+  </script>
+  <style>
+    :root{--brand:#ffd600;--ease:cubic-bezier(.22,1,.36,1);--easeSnap:cubic-bezier(.18,.89,.32,1.28);--dFast:320ms;--dMid:760ms;--dSlow:1200ms;--stagger:90ms;--progress:0;}
+    html,body{background:#0a0a0a;color:#fff;font-family:'Sora',sans-serif;}
+    .display-font{font-family:'Bebas Neue',sans-serif;letter-spacing:.01em;}
+    .bx-border{border-color:rgba(255,214,0,.12)}
+    .grain::before{content:'';position:fixed;inset:-100%;z-index:9999;opacity:.05;pointer-events:none;mix-blend-mode:overlay;background-image:radial-gradient(circle at 20% 20%,rgba(255,255,255,.7) 1px,transparent 1.5px),radial-gradient(circle at 70% 60%,rgba(255,255,255,.6) 1px,transparent 1.5px);background-size:140px 140px,180px 180px;animation:grain 8s steps(8) infinite}
+    @keyframes grain{0%{transform:translate(0,0)}25%{transform:translate(-4%,-3%)}50%{transform:translate(2%,-5%)}75%{transform:translate(-3%,2%)}100%{transform:translate(0,0)}}
+    #scroll-progress{transform-origin:0 50%;transform:scaleX(var(--progress));transition:transform 120ms linear}
+    #loader{transform:translateY(0);opacity:1;transition:transform var(--dSlow) var(--ease),opacity var(--dFast) var(--ease)}
+    body.is-loaded #loader{transform:translateY(-100%);opacity:0;pointer-events:none}
+    .intro-item{opacity:0;transform:translate3d(0,28px,0);transition:transform var(--dMid) var(--ease),opacity var(--dMid) var(--ease)}
+    .intro-item.is-visible{opacity:1;transform:translate3d(0,0,0)}
+    .split-line{display:block;overflow:hidden}.split-line .line-inner{display:inline-block;transform:translate3d(0,110%,0);opacity:0;transition:transform var(--dSlow) var(--ease),opacity var(--dMid) var(--ease)}
+    .split-line.is-visible .line-inner{transform:translate3d(0,0,0);opacity:1}
+    .hero-ghost{color:rgba(255,255,255,.16)}
+    [data-reveal]{opacity:0;transform:translate3d(0,var(--offset,56px),0);clip-path:inset(0 0 24% 0);transition:transform var(--dSlow) var(--ease),opacity var(--dMid) var(--ease),clip-path var(--dSlow) var(--ease)}
+    [data-reveal='up']{--offset:64px;clip-path:inset(0 0 26% 0)}[data-reveal='down']{--offset:-64px;clip-path:inset(26% 0 0 0)}
+    [data-reveal].is-revealed{opacity:1;transform:translate3d(0,0,0);clip-path:inset(0 0 0 0)}
+    [data-stagger]>*{opacity:0;transform:translate3d(0,24px,0);transition:opacity var(--dMid) var(--ease),transform var(--dMid) var(--ease)}
+    [data-stagger].is-staggered>*{opacity:1;transform:translate3d(0,0,0)}
+    @media (pointer:fine){body.cursor-enabled,body.cursor-enabled a,body.cursor-enabled button,body.cursor-enabled [data-magnetic],body.cursor-enabled [data-tilt],body.cursor-enabled input,body.cursor-enabled textarea{cursor:none!important}}
+    #custom-cursor{width:0;height:0;opacity:0;transition:opacity var(--dFast) var(--ease);mix-blend-mode:normal}body.cursor-enabled #custom-cursor{opacity:1}#custom-cursor.is-hovering{mix-blend-mode:difference}
+    #cursor-ring,#cursor-dot{position:absolute;border-radius:9999px;transform:translate3d(-50%,-50%,0);transition:all var(--dFast) var(--ease)}
+    #cursor-ring{width:54px;height:54px;border:1px solid rgba(255,255,255,.28);opacity:.7;box-shadow:0 0 0 0 rgba(255,255,255,0)}#cursor-dot{width:9px;height:9px;background:#fff}#custom-cursor.is-hovering #cursor-ring{animation:waterPulse 1.2s ease-out infinite;border-color:rgba(255,255,255,.95)}#custom-cursor.is-hovering #cursor-dot{transform:translate3d(-50%,-50%,0) scale(1.65)}@keyframes waterPulse{0%{box-shadow:0 0 0 0 rgba(255,255,255,.55)}70%{box-shadow:0 0 0 24px rgba(255,255,255,0)}100%{box-shadow:0 0 0 0 rgba(255,255,255,0)}}
+    #cursor-label{position:absolute;transform:translate3d(-50%,-50%,0);font-size:.52rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;white-space:nowrap;opacity:0;transition:opacity var(--dFast) var(--ease)}
+    #custom-cursor[data-mode='view'] #cursor-ring{width:74px;height:74px;opacity:.5}
+    #custom-cursor[data-mode='open'] #cursor-ring{width:86px;height:86px;border-color:rgba(255,214,0,.8);opacity:.8}
+    #custom-cursor[data-mode='open'] #cursor-dot{width:14px;height:14px;background:var(--brand)}
+    #custom-cursor.has-label #cursor-label{opacity:1}
+    .tilt-card{transform:perspective(1100px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transition:transform 240ms var(--ease),background-color 360ms var(--ease),border-color 360ms var(--ease)}
+    .project-card{position:relative;overflow:hidden;background:transparent;--mx:50%;--my:50%}.project-card::before{content:'';position:absolute;inset:0;background:linear-gradient(130deg,rgba(255,214,0,.14),rgba(255,214,0,0));opacity:0;transition:opacity var(--dMid) var(--ease);pointer-events:none}
+    .project-card::after{content:'';position:absolute;inset:-1px;background:radial-gradient(220px circle at var(--mx) var(--my),rgba(255,214,0,.22),transparent 60%);opacity:0;transition:opacity var(--dFast) var(--ease);pointer-events:none;mix-blend-mode:screen}.project-card:hover::before,.project-card:hover::after{opacity:1}.arrow-shell,.arrow-icon,.tag-chip{transition:all var(--dFast) var(--ease)}
+    .project-card:hover .arrow-shell{transform:scale(1.1);border-color:rgba(10,10,10,.3)}.project-card:hover .arrow-icon{transform:translate3d(4px,-4px,0) rotate(.02turn);color:#0a0a0a}
+    .project-card:hover .tag-chip{transform:translate3d(0,-5px,0);background:rgba(10,10,10,.08);border-color:rgba(10,10,10,.2);color:#0a0a0a}.work-card{border:1px solid rgba(255,214,0,.2);border-radius:2rem;background:rgba(255,255,255,.01);transition:transform var(--dMid) var(--ease),background-color var(--dMid) var(--ease),border-color var(--dMid) var(--ease),box-shadow var(--dMid) var(--ease)}.work-card:hover{transform:translate3d(0,-14px,0);background:var(--brand);border-color:rgba(255,214,0,.6);box-shadow:0 24px 60px rgba(0,0,0,.35)}.work-card:hover h3,.work-card:hover p,.work-card:hover li,.work-card:hover span{color:#0a0a0a !important}.work-card:hover .tag-chip{background:rgba(10,10,10,.08);border-color:rgba(10,10,10,.22)}
+    .preview-frame{position:relative;overflow:hidden;border-radius:2rem;border:1px solid rgba(255,214,0,.18);background:#050505;isolation:isolate;min-height:480px}
+    .preview-frame img{width:100%;height:100%;object-fit:cover;filter:grayscale(16%) contrast(1.04) brightness(.8);transition:transform var(--dSlow) var(--ease),filter var(--dMid) var(--ease)}
+    .preview-alt{position:absolute;inset:0;clip-path:polygon(0 100%,100% 100%,100% 100%,0 100%);transition:clip-path var(--dSlow) var(--ease)}
+    .preview-frame:hover .preview-alt,.preview-frame:focus-visible .preview-alt{clip-path:polygon(0 0,100% 0,100% 100%,0 100%)}
+    .preview-frame:hover img,.preview-frame:focus-visible img{filter:grayscale(0) contrast(1) brightness(1);transform:scale(1.05)}
+    .preview-sheen{position:absolute;inset:0;pointer-events:none;background:linear-gradient(125deg,rgba(255,214,0,0) 18%,rgba(255,214,0,.4) 50%,rgba(255,214,0,0) 82%);transform:translateX(-120%);transition:transform 900ms var(--ease);mix-blend-mode:screen}
+    .preview-frame:hover .preview-sheen{transform:translateX(120%)}
+    .preview-mini{border:1px solid rgba(255,214,0,.12);background:linear-gradient(140deg,rgba(255,255,255,.04),rgba(255,255,255,.01));transition:transform var(--dFast) var(--ease),border-color var(--dFast) var(--ease)}
+    .preview-mini:hover{transform:translate3d(0,-6px,0);border-color:rgba(255,214,0,.36)}
+    .butter-link{position:relative;display:inline-block;overflow:hidden;line-height:1.1}
+    .butter-link .label{display:block;transition:transform var(--dMid) var(--ease)}
+    .butter-link::after{content:attr(data-text);position:absolute;left:0;top:100%;color:var(--brand);transition:transform var(--dMid) var(--ease)}
+    .butter-link:hover .label,.butter-link:focus-visible .label{transform:translateY(-100%)}
+    .butter-link:hover::after,.butter-link:focus-visible::after{transform:translateY(-100%)}
+  </style>
+  <style>
+    @keyframes marqueeMove{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+    .animate-marquee{animation:marqueeMove 26s linear infinite}.hover-pause:hover .animate-marquee{animation-play-state:paused}
+    .field{position:relative;padding-top:1.4rem}
+    .field input,.field textarea{width:100%;border:0;border-bottom:1px solid rgba(255,214,0,.18);background:transparent;color:#fff;font-size:clamp(1.2rem,2.2vw,1.6rem);padding:.75rem 0;outline:none}
+    .field label{position:absolute;left:0;top:1.9rem;font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:#5a5a5a;font-weight:700;pointer-events:none;transition:all var(--dFast) var(--ease)}
+    .field textarea{resize:vertical;min-height:84px}
+    .field .field-line{position:absolute;left:0;bottom:0;width:100%;height:2px;background:var(--brand);transform:scaleX(0);transform-origin:0 50%;transition:transform var(--dMid) var(--ease);pointer-events:none}
+    .field input:focus+label,.field input:not(:placeholder-shown)+label,.field textarea:focus+label,.field textarea:not(:placeholder-shown)+label{top:0;font-size:.62rem;color:var(--brand)}
+    .field input:focus~.field-line,.field textarea:focus~.field-line{transform:scaleX(1)}
+    .contact-submit{position:relative;overflow:hidden;isolation:isolate;transition:transform var(--dFast) var(--ease),box-shadow var(--dFast) var(--ease)}
+    .contact-submit:hover{transform:translate3d(0,-3px,0);box-shadow:0 16px 40px rgba(255,214,0,.24)}
+    .contact-submit .btn-shine{position:absolute;inset:0;background:linear-gradient(120deg,rgba(255,255,255,0) 0%,rgba(255,255,255,.55) 50%,rgba(255,255,255,0) 100%);transform:translateX(-140%);transition:transform 760ms var(--ease);z-index:-1}
+    .contact-submit:hover .btn-shine{transform:translateX(130%)}
+    .btn-ripple{position:absolute;width:10px;height:10px;border-radius:9999px;background:rgba(255,255,255,.6);transform:translate(-50%,-50%) scale(0);pointer-events:none;opacity:0}
+    .btn-ripple.is-active{animation:ripple 650ms ease-out forwards}@keyframes ripple{0%{transform:translate(-50%,-50%) scale(0);opacity:.72}100%{transform:translate(-50%,-50%) scale(36);opacity:0}}
+    .form-status{opacity:0;transform:translate3d(0,12px,0);transition:opacity var(--dFast) var(--ease),transform var(--dFast) var(--ease)}.form-status.is-visible{opacity:1;transform:translate3d(0,0,0)}
+    .focus-ring:focus-visible{outline:2px solid var(--brand);outline-offset:4px}
+    @media (max-width:1024px){.preview-frame{min-height:380px}}
+    @media (prefers-reduced-motion: reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}[data-reveal],[data-stagger]>*,.intro-item,.split-line .line-inner{opacity:1!important;transform:none!important;clip-path:none!important}.grain::before,#custom-cursor,#webgl-canvas,#loader{display:none!important}}
+  </style>
+</head>
+<body class="min-h-screen bg-[#0a0a0a] text-white font-body selection:bg-brand selection:text-dark overflow-x-hidden relative grain">
+  <div id="scroll-progress" class="fixed top-0 left-0 h-[2px] w-full bg-brand z-[1200]"></div>
+  <canvas id="webgl-canvas" class="fixed top-0 left-0 w-full h-full z-[-1] pointer-events-none opacity-30"></canvas>
+  <div id="loader" class="fixed inset-0 z-[1000] bg-brand flex items-center justify-center"><h1 class="display-font text-dark text-7xl md:text-9xl tracking-[0.02em]">HARISON</h1></div>
+  <div id="custom-cursor" class="fixed top-0 left-0 pointer-events-none z-[1100]" data-mode="base"><div id="cursor-ring"></div><div id="cursor-dot"></div><div id="cursor-label"></div></div>
+  <nav class="fixed top-0 left-0 w-full p-8 md:p-14 flex justify-between items-center z-50 mix-blend-difference">
+    <a href="#hero" data-magnetic data-cursor-label="OPEN" class="focus-ring butter-link inline-block text-2xl font-extrabold tracking-tight uppercase" data-text="H."><span class="label">H.</span></a>
+    <div class="hidden md:flex gap-14 text-[10px] font-extrabold tracking-[0.3em] uppercase opacity-80">
+      <a href="#work" data-cursor-label="OPEN" data-text="Experience" class="focus-ring butter-link hover:text-brand transition-colors"><span class="label">Experience</span></a>
+      <a href="#projects" data-cursor-label="OPEN" data-text="Projects" class="focus-ring butter-link hover:text-brand transition-colors"><span class="label">Projects</span></a>
+      <a href="#contact" data-cursor-label="OPEN" data-text="Contact" class="focus-ring butter-link hover:text-brand transition-colors"><span class="label">Contact</span></a>
+    </div>
+  </nav>
+
+  <main class="max-w-[1920px] mx-auto border-x bx-border">
+    <section id="hero" class="min-h-screen flex flex-col justify-between pt-28 pb-24 px-8 md:px-24 border-b bx-border">
+      <div class="max-w-7xl">
+        <p class="intro-item text-[10px] font-extrabold tracking-[0.35em] uppercase text-brand/90">Associate Software Developer</p>
+        <h1 class="display-font mt-10 leading-[0.78] text-[20vw] md:text-[15vw] lg:text-[13vw] uppercase">
+          <span class="split-line depth-layer block" data-depth="0.12">Harison</span>
+          <span class="split-line depth-layer block hero-ghost" data-depth="0.06">Full Stack</span>
+        </h1>
+      </div>
+      <div class="mt-20 grid grid-cols-1 md:grid-cols-12 gap-14 items-end">
+        <p id="hero-subtitle" class="intro-item md:col-span-8 text-3xl md:text-6xl font-semibold tracking-tight text-muted leading-[1.08]">Engineered dynamic UI components for a <span class="text-white">low-code and no-code HIMS SaaS platform</span> and built responsive patient portal layouts.</p>
+        <div class="md:col-span-4 flex flex-col gap-7 text-[10px] text-muted font-extrabold tracking-[0.2em] uppercase md:text-right">
+          <div class="intro-item"><p class="mb-2 opacity-40">Technical Skills</p><p class="text-brand">TypeScript, Angular 20, FastAPI, MongoDB, gRPC</p></div>
+          <div class="intro-item"><p class="mb-2 opacity-40">Currently at</p><p class="text-white">Flexilant Works</p></div>
+          <div class="intro-item"><a href="#projects" data-magnetic data-cursor-label="OPEN" class="focus-ring inline-flex items-center justify-center px-7 py-4 border border-brand/40 rounded-full text-brand hover:bg-brand hover:text-dark transition-colors">View Habit Tracker</a></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="work" class="border-b bx-border" data-reveal="up">
+      <div class="px-8 md:px-24 py-24 border-b bx-border"><h2 class="display-font text-7xl md:text-[10rem] tracking-[0.02em] uppercase leading-none">Work Experience</h2></div>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 p-8 md:p-14" data-stagger>
+        <article class="project-card work-card tilt-card p-12 md:p-24 min-h-[680px] flex flex-col justify-between" data-tilt data-cursor-label="VIEW">
+          <div>
+            <div class="mb-16"><span class="inline-flex px-4 py-2 rounded-full border border-brand/30 text-[10px] font-extrabold uppercase tracking-widest text-muted">2025 - Present</span></div>
+            <h3 class="display-font text-6xl md:text-8xl uppercase leading-[0.86] tracking-[0.01em] mb-7">Associate<br>Software Developer</h3><p class="text-2xl md:text-3xl text-muted font-bold mb-12">Flexilant Works</p>
+            <ul class="space-y-7 text-lg md:text-xl text-[#d8d8d8] font-medium leading-relaxed max-w-xl"><li>Engineered dynamic UI components for the Agileo.ai low-code and no-code SaaS platform, enabling customizable HIMS configuration.</li><li>Enhanced the drag-and-drop Form Designer and Page Builder using Angular 20 with configurable styling for inplace tables and custom label indicators.</li><li>Implemented advanced conditional logic with automated quantity calculation for medical inventory mapping.</li><li>Built responsive Top Bar and Box View layouts for the Patient Portal using Tailwind CSS and PrimeNG.</li></ul>
+          </div>
+          <div class="mt-12 flex flex-wrap gap-4"><span class="tag-chip px-5 py-2 border bx-border rounded-full text-[10px] font-extrabold uppercase">Angular 20</span><span class="tag-chip px-5 py-2 border bx-border rounded-full text-[10px] font-extrabold uppercase">TypeScript</span><span class="tag-chip px-5 py-2 border bx-border rounded-full text-[10px] font-extrabold uppercase">Tailwind CSS</span><span class="tag-chip px-5 py-2 border bx-border rounded-full text-[10px] font-extrabold uppercase">PrimeNG</span><span class="tag-chip px-5 py-2 border bx-border rounded-full text-[10px] font-extrabold uppercase">RxJS</span></div>
+        </article>
+        <article class="project-card work-card tilt-card p-12 md:p-24 min-h-[680px] flex flex-col justify-between" data-tilt data-cursor-label="VIEW">
+          <div>
+            <div class="mb-16"><span class="inline-flex px-4 py-2 rounded-full border border-brand/30 text-[10px] font-extrabold uppercase tracking-widest text-muted">Jun 2025 - Sep 2025</span></div>
+            <h3 class="display-font text-6xl md:text-8xl uppercase leading-[0.86] tracking-[0.01em] mb-7">Software Developer<br>Intern</h3><p class="text-2xl md:text-3xl text-muted font-bold mb-12">Flexilant Works</p>
+            <ul class="space-y-7 text-lg md:text-xl text-[#d8d8d8] font-medium leading-relaxed max-w-xl"><li>Contributed to architectural development of a multi-tenant HIMS platform with FastAPI BFF, Angular SPA, and MongoDB.</li><li>Developed the Code Set Creation module for dynamic medical lookups and XSearch functionality.</li><li>Integrated frontend components with internal Python and FastAPI services over gRPC protocols.</li></ul>
+          </div>
+          <div class="mt-12 flex flex-wrap gap-4"><span class="tag-chip px-5 py-2 border bx-border rounded-full text-[10px] font-extrabold uppercase">FastAPI</span><span class="tag-chip px-5 py-2 border bx-border rounded-full text-[10px] font-extrabold uppercase">Angular</span><span class="tag-chip px-5 py-2 border bx-border rounded-full text-[10px] font-extrabold uppercase">MongoDB</span><span class="tag-chip px-5 py-2 border bx-border rounded-full text-[10px] font-extrabold uppercase">gRPC</span><span class="tag-chip px-5 py-2 border bx-border rounded-full text-[10px] font-extrabold uppercase">Docker</span><span class="tag-chip px-5 py-2 border bx-border rounded-full text-[10px] font-extrabold uppercase">Git</span></div>
+        </article>
+      </div>
+    </section>
+    <section id="projects" class="border-b bx-border" data-reveal="down">
+      <div class="px-8 md:px-24 py-24 border-b bx-border"><h2 class="display-font text-7xl md:text-[10rem] tracking-[0.02em] uppercase leading-none text-brand">Personal Project</h2></div>
+      <div class="p-8 md:p-20 lg:p-24">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+          <article class="lg:col-span-5 lg:sticky lg:top-24 space-y-8">
+            <p id="featured-meta" class="text-[10px] font-extrabold uppercase tracking-[0.26em] text-brand"></p>
+            <h3 id="featured-title" class="display-font text-7xl md:text-9xl uppercase leading-[0.8]"></h3>
+            <p id="featured-summary" class="text-2xl md:text-3xl text-muted leading-tight"></p>
+            <ul id="featured-points" class="space-y-5 text-lg text-[#d8d8d8] leading-relaxed"></ul>
+            <div id="featured-tags" class="flex flex-wrap gap-3 pt-4"></div>
+            <a id="featured-link" href="#" data-magnetic data-cursor-label="OPEN" class="focus-ring inline-flex items-center gap-4 px-7 py-4 border border-brand/30 rounded-full text-[10px] font-extrabold uppercase tracking-[0.24em] hover:bg-brand hover:text-dark transition-colors">Open Case Study</a>
+          </article>
+          <div class="lg:col-span-7 space-y-8">
+            <a id="featured-frame" href="#" data-tilt data-cursor-label="VIEW" class="focus-ring preview-frame tilt-card block" aria-label="Featured case study">
+              <img id="featured-media-base" src="" alt="Primary product interface preview">
+              <img id="featured-media-alt" class="preview-alt" src="" alt="Secondary product interface preview">
+              <div class="preview-sheen"></div>
+            </a>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6" data-stagger>
+              <article class="preview-mini rounded-3xl p-7" data-reveal="up" data-cursor-label="VIEW"><p class="text-[10px] uppercase tracking-[0.22em] font-extrabold text-brand mb-4">Planner Module</p><h4 class="text-2xl font-bold mb-3">Monthly, Weekly, Daily</h4><p class="text-muted leading-relaxed">Linear calendar with seamless switching between monthly, weekly, and daily planning views for optimized scheduling.</p></article>
+              <article class="preview-mini rounded-3xl p-7" data-reveal="up" data-cursor-label="VIEW"><p class="text-[10px] uppercase tracking-[0.22em] font-extrabold text-brand mb-4">Command Center</p><h4 class="text-2xl font-bold mb-3">Pomodoro and Metrics</h4><p class="text-muted leading-relaxed">Dashboard with reactive protocol filtering, built-in Pomodoro timers, and analytics for streak sequences and execution efficiency.</p></article>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="education" class="border-b bx-border" data-reveal="up">
+      <div class="grid grid-cols-1 lg:grid-cols-2">
+        <div class="p-12 md:p-24 border-b lg:border-b-0 lg:border-r bx-border"><h2 class="display-font text-7xl md:text-9xl uppercase leading-none mb-16">Education</h2><div class="space-y-14"><article><p class="text-[10px] font-extrabold uppercase text-brand mb-4 tracking-widest">2021 - 2025</p><h4 class="text-4xl md:text-5xl font-bold uppercase mb-2">B.Tech EEE</h4><p class="text-2xl text-muted font-medium">Sastra University</p><p class="mt-6 inline-block bg-white/5 border border-white/10 px-6 py-2 rounded-full text-xs font-bold uppercase tracking-widest">GPA: 7.96</p></article></div></div>
+        <div class="p-12 md:p-24 grid grid-cols-1 gap-12 self-center"><article class="border-l-2 border-brand/20 pl-10 hover:border-brand transition-colors"><p class="text-[10px] font-extrabold uppercase text-muted mb-4 tracking-widest">2021</p><h4 class="text-3xl font-bold uppercase mb-2">Higher Secondary</h4><p class="text-muted font-medium text-lg">Maxwell Matriculation HSS - <span class="text-white">91.6%</span></p></article><article class="border-l-2 border-brand/20 pl-10 hover:border-brand transition-colors"><p class="text-[10px] font-extrabold uppercase text-muted mb-4 tracking-widest">2019</p><h4 class="text-3xl font-bold uppercase mb-2">Secondary</h4><p class="text-muted font-medium text-lg">Maxwell Matriculation HSS - <span class="text-white">85.6%</span></p></article></div>
+      </div>
+    </section>
+
+    <section class="border-b bx-border py-28 md:py-44 overflow-hidden hover-pause" data-reveal="down"><div class="flex animate-marquee whitespace-nowrap items-center"><div class="flex items-center gap-20 px-8" id="marquee-content"></div></div></section>
+
+    <section id="contact" class="border-b bx-border" data-reveal="up">
+      <div class="px-8 md:px-24 py-20 md:py-28 bg-[#0d0d0d]">
+        <h2 class="display-font text-7xl md:text-[9.5rem] uppercase leading-[0.8] mb-10">Contact<br><span class="text-brand">Details</span></h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-14">
+          <a href="mailto:spharison736@gmail.com" data-cursor-label="OPEN" class="focus-ring project-card rounded-3xl border bx-border p-8 md:p-10">
+            <p class="text-[10px] font-extrabold uppercase tracking-[0.24em] text-brand mb-3">Email</p>
+            <p class="text-xl md:text-2xl font-bold break-all">spharison736@gmail.com</p>
+          </a>
+          <a href="tel:7871160344" data-cursor-label="OPEN" class="focus-ring project-card rounded-3xl border bx-border p-8 md:p-10">
+            <p class="text-[10px] font-extrabold uppercase tracking-[0.24em] text-brand mb-3">Phone</p>
+            <p class="text-xl md:text-2xl font-bold">787-116-0344</p>
+          </a>
+          <a href="https://linkedin.com/in/harison-s-p" data-cursor-label="OPEN" class="focus-ring project-card rounded-3xl border bx-border p-8 md:p-10">
+            <p class="text-[10px] font-extrabold uppercase tracking-[0.24em] text-brand mb-3">LinkedIn</p>
+            <p class="text-xl md:text-2xl font-bold">linkedin.com/in/harison-s-p</p>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <footer class="p-12 md:p-20 flex flex-col md:flex-row justify-between items-center text-[10px] font-extrabold uppercase tracking-[0.34em] text-muted opacity-60"><div>&copy; 2026 Harison S.P.</div><div class="flex gap-12 mt-10 md:mt-0"><a href="https://linkedin.com/in/harison-s-p" data-cursor-label="OPEN" class="focus-ring hover:text-white transition-colors">LinkedIn</a><a href="#hero" data-cursor-label="OPEN" class="focus-ring hover:text-white transition-colors">Top</a></div></footer>
+  </main>
+
+  <script>
+    const MOTION=Object.freeze({duration:{fast:320,medium:760,slow:1200},ease:{standard:'cubic-bezier(0.22, 1, 0.36, 1)',snap:'cubic-bezier(0.18, 0.89, 0.32, 1.28)'},stagger:90,hoverStrength:0.32,scrollDamping:0.12});
+    const prefersReducedMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const finePointer=window.matchMedia('(pointer: fine)').matches;
+    const featuredProject={meta:'Personal Project',title:'Habit Tracker',summary:'Productivity and planning application built with Angular 20 and Signals for highly performant reactive state management.',points:['Developed a planner module with monthly, weekly, and daily planning views.','Architected a System feature to execute and track long-term goals integrated into weekly and daily planners.','Built a Command Center dashboard with reactive filtering, Pomodoro timers, and analytics metrics.','Designed a responsive UI architecture using Tailwind CSS utility classes.'],tags:['Angular 20','TypeScript','Tailwind CSS','Angular Signals','Client-Side Data Parsing'],link:'#',media:{base:'https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=2080&auto=format&fit=crop',alt:'https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=2070&auto=format&fit=crop'}};
+    function renderFeaturedProject(p){
+      document.getElementById('featured-meta').textContent=p.meta;
+      document.getElementById('featured-title').textContent=p.title;
+      document.getElementById('featured-summary').textContent=p.summary;
+      document.getElementById('featured-points').innerHTML=p.points.map(x=>'<li>'+x+'</li>').join('');
+      document.getElementById('featured-tags').innerHTML=p.tags.map(t=>"<span class='tag-chip px-4 py-2 border bx-border rounded-full text-[10px] font-extrabold uppercase tracking-[0.16em]'>"+t+"</span>").join('');
+      document.getElementById('featured-link').href=p.link;document.getElementById('featured-frame').href=p.link;
+      document.getElementById('featured-media-base').src=p.media.base;document.getElementById('featured-media-alt').src=p.media.alt;
+    }
+    renderFeaturedProject(featuredProject);
+
+    const techStack=['TypeScript','JavaScript','Python','HTML5','CSS3','Angular 18/20','PrimeNG','FastAPI','MongoDB','gRPC','Tailwind CSS','Angular Signals','RxJS','Git','Docker','Jira','REST APIs'];
+    const marquee=document.getElementById('marquee-content'); [...techStack,...techStack].forEach(tech=>{const node=document.createElement('div'); node.className='flex items-center gap-20'; node.innerHTML="<span class='display-font text-[12vw] md:text-[8.5rem] uppercase text-brand hover:text-white transition-colors'>"+tech+"</span><span class='text-5xl text-muted/30'>/</span>"; marquee.appendChild(node);});
+
+    function prepareSplitLines(){document.querySelectorAll('.split-line').forEach(line=>{if(line.dataset.ready==='true')return; const text=line.textContent.trim(); line.innerHTML="<span class='line-inner'>"+text+"</span>"; line.dataset.ready='true';});}
+    function playIntro(){const intro=[...document.querySelectorAll('.intro-item')]; const lines=[...document.querySelectorAll('.split-line')]; lines.forEach((l,i)=>setTimeout(()=>l.classList.add('is-visible'),180+i*MOTION.stagger)); intro.forEach((it,i)=>setTimeout(()=>it.classList.add('is-visible'),420+i*MOTION.stagger));}
+    function markLoaded(){document.body.classList.add('is-loaded'); if(finePointer&&!prefersReducedMotion)document.body.classList.add('cursor-enabled');}
+
+    function initProgress(){
+      const update=()=>{const max=document.documentElement.scrollHeight-window.innerHeight; const ratio=max>0?window.scrollY/max:0; document.documentElement.style.setProperty('--progress',String(Math.min(1,Math.max(0,ratio))));};
+      update(); let ticking=false; window.addEventListener('scroll',()=>{if(ticking)return; ticking=true; requestAnimationFrame(()=>{update(); ticking=false;});},{passive:true}); window.addEventListener('resize',update);
+    }
+
+    function initReveal(){
+      const targets=document.querySelectorAll('[data-reveal]'); const reveal=(el)=>{el.classList.add('is-revealed'); const block=el.querySelector('[data-stagger]'); if(block){[...block.children].forEach((c,i)=>c.style.transitionDelay=(i*MOTION.stagger)+'ms'); block.classList.add('is-staggered');}};
+      if(prefersReducedMotion){targets.forEach(reveal); return;}
+      const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(!e.isIntersecting)return; reveal(e.target); obs.unobserve(e.target);});},{threshold:.14}); targets.forEach(t=>obs.observe(t));
+    }
+
+    function initHeroParallax(){
+      if(prefersReducedMotion||!finePointer)return; const hero=document.getElementById('hero'); const layers=hero.querySelectorAll('.depth-layer'); let frame=null,px=0,py=0;
+      hero.addEventListener('pointermove',e=>{const r=hero.getBoundingClientRect(); px=((e.clientX-r.left)/r.width)*2-1; py=((e.clientY-r.top)/r.height)*2-1; if(frame)return; frame=requestAnimationFrame(()=>{layers.forEach(layer=>{const d=Number(layer.dataset.depth||0.05); layer.style.transform='translate3d('+(px*24*d).toFixed(2)+'px,'+(py*18*d).toFixed(2)+'px,0)';}); frame=null;});});
+      hero.addEventListener('pointerleave',()=>layers.forEach(layer=>layer.style.transform='translate3d(0,0,0)'));
+    }
+
+    function initCursor(){
+      const cursor=document.getElementById('custom-cursor'), label=document.getElementById('cursor-label'); if(!finePointer||prefersReducedMotion){cursor.style.display='none'; return;}
+      let mx=window.innerWidth/2,my=window.innerHeight/2,cx=mx,cy=my; (function tick(){cx+=(mx-cx)*0.2; cy+=(my-cy)*0.2; cursor.style.transform='translate3d('+cx+'px,'+cy+'px,0)'; requestAnimationFrame(tick);})();
+      window.addEventListener('mousemove',e=>{mx=e.clientX; my=e.clientY;});
+      const apply=(target)=>{const host=target?target.closest('[data-cursor-label],a,button,input,textarea,[data-tilt]'):null; let text='',mode='base'; if(host){text=host.dataset.cursorLabel||(host.matches('a,button')?'OPEN':'VIEW'); mode=text.toLowerCase(); if(!['base','open','view','drag'].includes(mode))mode='view';} cursor.dataset.mode=mode; label.textContent=text; cursor.classList.toggle('has-label',Boolean(text)); cursor.classList.toggle('is-hovering',Boolean(host));};
+      document.addEventListener('mouseover',e=>apply(e.target)); document.addEventListener('mouseleave',()=>apply(null));
+    }
+
+    function initMagnetic(){if(prefersReducedMotion||!finePointer)return; document.querySelectorAll('[data-magnetic]').forEach(el=>{el.addEventListener('mousemove',e=>{const r=el.getBoundingClientRect(); const x=e.clientX-r.left-r.width/2; const y=e.clientY-r.top-r.height/2; el.style.transform='translate3d('+(x*MOTION.hoverStrength).toFixed(2)+'px,'+(y*MOTION.hoverStrength).toFixed(2)+'px,0)'; el.style.transition='transform 80ms linear';}); el.addEventListener('mouseleave',()=>{el.style.transform='translate3d(0,0,0)'; el.style.transition='transform 620ms '+MOTION.ease.standard;});});}
+
+    function initTilt(){if(prefersReducedMotion||!finePointer)return; document.querySelectorAll('[data-tilt]').forEach(card=>{card.addEventListener('pointermove',e=>{const r=card.getBoundingClientRect(); const x=(e.clientX-r.left)/r.width; const y=(e.clientY-r.top)/r.height; card.style.setProperty('--rx',((0.5-y)*8).toFixed(2)+'deg'); card.style.setProperty('--ry',((x-0.5)*9).toFixed(2)+'deg');}); card.addEventListener('pointerleave',()=>{card.style.setProperty('--rx','0deg'); card.style.setProperty('--ry','0deg');});});}
+
+    function initHoverSpotlight(){
+      if(prefersReducedMotion||!finePointer)return;
+      document.querySelectorAll('.project-card').forEach(card=>{
+        card.addEventListener('pointermove',e=>{
+          const r=card.getBoundingClientRect();
+          card.style.setProperty('--mx',(e.clientX-r.left)+'px');
+          card.style.setProperty('--my',(e.clientY-r.top)+'px');
+        });
+      });
+    }
+
+    function initContact(){const form=document.getElementById('contact-form'), status=document.getElementById('form-status'), submit=document.getElementById('contact-submit'), ripple=submit?submit.querySelector('.btn-ripple'):null; if(!form||!status||!submit||!ripple)return; submit.addEventListener('pointerdown',e=>{const r=submit.getBoundingClientRect(); ripple.style.left=(e.clientX-r.left)+'px'; ripple.style.top=(e.clientY-r.top)+'px'; ripple.classList.remove('is-active'); requestAnimationFrame(()=>ripple.classList.add('is-active'));}); form.addEventListener('submit',e=>{e.preventDefault(); status.textContent='Message staged. I will get back via email.'; status.classList.add('is-visible'); submit.setAttribute('aria-label','Message staged');});}
+
+    function initWebgl(){const canvas=document.getElementById('webgl-canvas'); if(prefersReducedMotion||window.innerWidth<900||!window.THREE){canvas.style.display='none'; return;} const scene=new THREE.Scene(); const camera=new THREE.PerspectiveCamera(72,window.innerWidth/window.innerHeight,0.1,1000); const renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:true}); renderer.setSize(window.innerWidth,window.innerHeight); renderer.setPixelRatio(Math.min(window.devicePixelRatio,1.5)); const geo=new THREE.TorusKnotGeometry(12,3,160,24); const mat=new THREE.MeshBasicMaterial({color:0xffd600,wireframe:true,transparent:true,opacity:.085}); const mesh=new THREE.Mesh(geo,mat); scene.add(mesh); camera.position.z=40; let target=0; window.addEventListener('scroll',()=>{target=window.scrollY*0.0014;},{passive:true}); (function animate(){mesh.rotation.x+=0.0006; mesh.rotation.y+=0.001+(target-mesh.rotation.y)*(MOTION.scrollDamping*0.02); renderer.render(scene,camera); requestAnimationFrame(animate);})(); window.addEventListener('resize',()=>{camera.aspect=window.innerWidth/window.innerHeight; camera.updateProjectionMatrix(); renderer.setSize(window.innerWidth,window.innerHeight);});}
+
+    prepareSplitLines(); initProgress(); initReveal(); initHeroParallax(); initCursor(); initMagnetic(); initTilt(); initHoverSpotlight(); initContact(); initWebgl();
+    window.addEventListener('load',()=>{if(prefersReducedMotion){document.body.classList.add('is-loaded'); document.querySelectorAll('.split-line,.intro-item').forEach(el=>el.classList.add('is-visible')); return;} setTimeout(markLoaded,720); setTimeout(playIntro,260);});
+  </script>
+</body>
+</html>
