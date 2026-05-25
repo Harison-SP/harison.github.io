@@ -1,271 +1,915 @@
-﻿
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Harison | Associate Software Developer</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Sora:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <title>Harison S.P. | Associate Software Developer</title>
+  
+  <!-- Three.js CDN for Advanced 3D Effects -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
-    tailwind.config={theme:{extend:{colors:{brand:'#ffd600',dark:'#0a0a0a',muted:'#8e8e8e'},fontFamily:{body:['Sora','sans-serif'],display:['Bebas Neue','sans-serif']}}}};
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: '#ffd600',
+            dark: '#050505',
+            surface: '#0d0d0d',
+            muted: '#8e8e8e',
+            accent: '#ffea70'
+          },
+          keyframes: {
+            wipeUp: {
+              '0%': { transform: 'translateY(0)' },
+              '100%': { transform: 'translateY(-100%)', visibility: 'hidden' }
+            },
+            fadeOut: {
+              '0%': { opacity: '1' },
+              '100%': { opacity: '0' }
+            }
+          },
+          animation: {
+            'wipeUp': 'wipeUp 1s cubic-bezier(0.77, 0, 0.175, 1) 0.8s forwards',
+            'fadeOut': 'fadeOut 0.3s ease 0.6s forwards'
+          }
+        }
+      }
+    }
   </script>
+
   <style>
-    :root{--brand:#ffd600;--ease:cubic-bezier(.22,1,.36,1);--easeSnap:cubic-bezier(.18,.89,.32,1.28);--dFast:320ms;--dMid:760ms;--dSlow:1200ms;--stagger:90ms;--progress:0;}
-    html,body{background:#0a0a0a;color:#fff;font-family:'Sora',sans-serif;}
-    .display-font{font-family:'Bebas Neue',sans-serif;letter-spacing:.01em;}
-    .bx-border{border-color:rgba(255,214,0,.12)}
-    .grain::before{content:'';position:fixed;inset:-100%;z-index:9999;opacity:.05;pointer-events:none;mix-blend-mode:overlay;background-image:radial-gradient(circle at 20% 20%,rgba(255,255,255,.7) 1px,transparent 1.5px),radial-gradient(circle at 70% 60%,rgba(255,255,255,.6) 1px,transparent 1.5px);background-size:140px 140px,180px 180px;animation:grain 8s steps(8) infinite}
-    @keyframes grain{0%{transform:translate(0,0)}25%{transform:translate(-4%,-3%)}50%{transform:translate(2%,-5%)}75%{transform:translate(-3%,2%)}100%{transform:translate(0,0)}}
-    #scroll-progress{transform-origin:0 50%;transform:scaleX(var(--progress));transition:transform 120ms linear}
-    #loader{transform:translateY(0);opacity:1;transition:transform var(--dSlow) var(--ease),opacity var(--dFast) var(--ease)}
-    body.is-loaded #loader{transform:translateY(-100%);opacity:0;pointer-events:none}
-    .intro-item{opacity:0;transform:translate3d(0,28px,0);transition:transform var(--dMid) var(--ease),opacity var(--dMid) var(--ease)}
-    .intro-item.is-visible{opacity:1;transform:translate3d(0,0,0)}
-    .split-line{display:block;overflow:hidden}.split-line .line-inner{display:inline-block;transform:translate3d(0,110%,0);opacity:0;transition:transform var(--dSlow) var(--ease),opacity var(--dMid) var(--ease)}
-    .split-line.is-visible .line-inner{transform:translate3d(0,0,0);opacity:1}
-    .hero-ghost{color:rgba(255,255,255,.16)}
-    [data-reveal]{opacity:0;transform:translate3d(0,var(--offset,56px),0);clip-path:inset(0 0 24% 0);transition:transform var(--dSlow) var(--ease),opacity var(--dMid) var(--ease),clip-path var(--dSlow) var(--ease)}
-    [data-reveal='up']{--offset:64px;clip-path:inset(0 0 26% 0)}[data-reveal='down']{--offset:-64px;clip-path:inset(26% 0 0 0)}
-    [data-reveal].is-revealed{opacity:1;transform:translate3d(0,0,0);clip-path:inset(0 0 0 0)}
-    [data-stagger]>*{opacity:0;transform:translate3d(0,24px,0);transition:opacity var(--dMid) var(--ease),transform var(--dMid) var(--ease)}
-    [data-stagger].is-staggered>*{opacity:1;transform:translate3d(0,0,0)}
-    @media (pointer:fine){body.cursor-enabled,body.cursor-enabled a,body.cursor-enabled button,body.cursor-enabled [data-magnetic],body.cursor-enabled [data-tilt],body.cursor-enabled input,body.cursor-enabled textarea{cursor:none!important}}
-    #custom-cursor{width:0;height:0;opacity:0;transition:opacity var(--dFast) var(--ease);mix-blend-mode:normal}body.cursor-enabled #custom-cursor{opacity:1}#custom-cursor.is-hovering{mix-blend-mode:difference}
-    #cursor-ring,#cursor-dot{position:absolute;border-radius:9999px;transform:translate3d(-50%,-50%,0);transition:all var(--dFast) var(--ease)}
-    #cursor-ring{width:54px;height:54px;border:1px solid rgba(255,255,255,.28);opacity:.7;box-shadow:0 0 0 0 rgba(255,255,255,0)}#cursor-dot{width:9px;height:9px;background:#fff}#custom-cursor.is-hovering #cursor-ring{animation:waterPulse 1.2s ease-out infinite;border-color:rgba(255,255,255,.95)}#custom-cursor.is-hovering #cursor-dot{transform:translate3d(-50%,-50%,0) scale(1.65)}@keyframes waterPulse{0%{box-shadow:0 0 0 0 rgba(255,255,255,.55)}70%{box-shadow:0 0 0 24px rgba(255,255,255,0)}100%{box-shadow:0 0 0 0 rgba(255,255,255,0)}}
-    #cursor-label{position:absolute;transform:translate3d(-50%,-50%,0);font-size:.52rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;white-space:nowrap;opacity:0;transition:opacity var(--dFast) var(--ease)}
-    #custom-cursor[data-mode='view'] #cursor-ring{width:74px;height:74px;opacity:.5}
-    #custom-cursor[data-mode='open'] #cursor-ring{width:86px;height:86px;border-color:rgba(255,214,0,.8);opacity:.8}
-    #custom-cursor[data-mode='open'] #cursor-dot{width:14px;height:14px;background:var(--brand)}
-    #custom-cursor.has-label #cursor-label{opacity:1}
-    .tilt-card{transform:perspective(1100px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transition:transform 240ms var(--ease),background-color 360ms var(--ease),border-color 360ms var(--ease)}
-    .project-card{position:relative;overflow:hidden;background:transparent;--mx:50%;--my:50%}.project-card::before{content:'';position:absolute;inset:0;background:linear-gradient(130deg,rgba(255,214,0,.14),rgba(255,214,0,0));opacity:0;transition:opacity var(--dMid) var(--ease);pointer-events:none}
-    .project-card::after{content:'';position:absolute;inset:-1px;background:radial-gradient(220px circle at var(--mx) var(--my),rgba(255,214,0,.22),transparent 60%);opacity:0;transition:opacity var(--dFast) var(--ease);pointer-events:none;mix-blend-mode:screen}.project-card:hover::before,.project-card:hover::after{opacity:1}.arrow-shell,.arrow-icon,.tag-chip{transition:all var(--dFast) var(--ease)}
-    .project-card:hover .arrow-shell{transform:scale(1.1);border-color:rgba(10,10,10,.3)}.project-card:hover .arrow-icon{transform:translate3d(4px,-4px,0) rotate(.02turn);color:#0a0a0a}
-    .project-card:hover .tag-chip{transform:translate3d(0,-5px,0);background:rgba(10,10,10,.08);border-color:rgba(10,10,10,.2);color:#0a0a0a}.work-card{border:1px solid rgba(255,214,0,.2);border-radius:2rem;background:rgba(255,255,255,.01);transition:transform var(--dMid) var(--ease),background-color var(--dMid) var(--ease),border-color var(--dMid) var(--ease),box-shadow var(--dMid) var(--ease)}.work-card:hover{transform:translate3d(0,-14px,0);background:var(--brand);border-color:rgba(255,214,0,.6);box-shadow:0 24px 60px rgba(0,0,0,.35)}.work-card:hover h3,.work-card:hover p,.work-card:hover li,.work-card:hover span{color:#0a0a0a !important}.work-card:hover .tag-chip{background:rgba(10,10,10,.08);border-color:rgba(10,10,10,.22)}
-    .preview-frame{position:relative;overflow:hidden;border-radius:2rem;border:1px solid rgba(255,214,0,.18);background:#050505;isolation:isolate;min-height:480px}
-    .preview-frame img{width:100%;height:100%;object-fit:cover;filter:grayscale(16%) contrast(1.04) brightness(.8);transition:transform var(--dSlow) var(--ease),filter var(--dMid) var(--ease)}
-    .preview-alt{position:absolute;inset:0;clip-path:polygon(0 100%,100% 100%,100% 100%,0 100%);transition:clip-path var(--dSlow) var(--ease)}
-    .preview-frame:hover .preview-alt,.preview-frame:focus-visible .preview-alt{clip-path:polygon(0 0,100% 0,100% 100%,0 100%)}
-    .preview-frame:hover img,.preview-frame:focus-visible img{filter:grayscale(0) contrast(1) brightness(1);transform:scale(1.05)}
-    .preview-sheen{position:absolute;inset:0;pointer-events:none;background:linear-gradient(125deg,rgba(255,214,0,0) 18%,rgba(255,214,0,.4) 50%,rgba(255,214,0,0) 82%);transform:translateX(-120%);transition:transform 900ms var(--ease);mix-blend-mode:screen}
-    .preview-frame:hover .preview-sheen{transform:translateX(120%)}
-    .preview-mini{border:1px solid rgba(255,214,0,.12);background:linear-gradient(140deg,rgba(255,255,255,.04),rgba(255,255,255,.01));transition:transform var(--dFast) var(--ease),border-color var(--dFast) var(--ease)}
-    .preview-mini:hover{transform:translate3d(0,-6px,0);border-color:rgba(255,214,0,.36)}
-    .butter-link{position:relative;display:inline-block;overflow:hidden;line-height:1.1}
-    .butter-link .label{display:block;transition:transform var(--dMid) var(--ease)}
-    .butter-link::after{content:attr(data-text);position:absolute;left:0;top:100%;color:var(--brand);transition:transform var(--dMid) var(--ease)}
-    .butter-link:hover .label,.butter-link:focus-visible .label{transform:translateY(-100%)}
-    .butter-link:hover::after,.butter-link:focus-visible::after{transform:translateY(-100%)}
-  </style>
-  <style>
-    @keyframes marqueeMove{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
-    .animate-marquee{animation:marqueeMove 26s linear infinite}.hover-pause:hover .animate-marquee{animation-play-state:paused}
-    .field{position:relative;padding-top:1.4rem}
-    .field input,.field textarea{width:100%;border:0;border-bottom:1px solid rgba(255,214,0,.18);background:transparent;color:#fff;font-size:clamp(1.2rem,2.2vw,1.6rem);padding:.75rem 0;outline:none}
-    .field label{position:absolute;left:0;top:1.9rem;font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:#5a5a5a;font-weight:700;pointer-events:none;transition:all var(--dFast) var(--ease)}
-    .field textarea{resize:vertical;min-height:84px}
-    .field .field-line{position:absolute;left:0;bottom:0;width:100%;height:2px;background:var(--brand);transform:scaleX(0);transform-origin:0 50%;transition:transform var(--dMid) var(--ease);pointer-events:none}
-    .field input:focus+label,.field input:not(:placeholder-shown)+label,.field textarea:focus+label,.field textarea:not(:placeholder-shown)+label{top:0;font-size:.62rem;color:var(--brand)}
-    .field input:focus~.field-line,.field textarea:focus~.field-line{transform:scaleX(1)}
-    .contact-submit{position:relative;overflow:hidden;isolation:isolate;transition:transform var(--dFast) var(--ease),box-shadow var(--dFast) var(--ease)}
-    .contact-submit:hover{transform:translate3d(0,-3px,0);box-shadow:0 16px 40px rgba(255,214,0,.24)}
-    .contact-submit .btn-shine{position:absolute;inset:0;background:linear-gradient(120deg,rgba(255,255,255,0) 0%,rgba(255,255,255,.55) 50%,rgba(255,255,255,0) 100%);transform:translateX(-140%);transition:transform 760ms var(--ease);z-index:-1}
-    .contact-submit:hover .btn-shine{transform:translateX(130%)}
-    .btn-ripple{position:absolute;width:10px;height:10px;border-radius:9999px;background:rgba(255,255,255,.6);transform:translate(-50%,-50%) scale(0);pointer-events:none;opacity:0}
-    .btn-ripple.is-active{animation:ripple 650ms ease-out forwards}@keyframes ripple{0%{transform:translate(-50%,-50%) scale(0);opacity:.72}100%{transform:translate(-50%,-50%) scale(36);opacity:0}}
-    .form-status{opacity:0;transform:translate3d(0,12px,0);transition:opacity var(--dFast) var(--ease),transform var(--dFast) var(--ease)}.form-status.is-visible{opacity:1;transform:translate3d(0,0,0)}
-    .focus-ring:focus-visible{outline:2px solid var(--brand);outline-offset:4px}
-    @media (max-width:1024px){.preview-frame{min-height:380px}}
-    @media (prefers-reduced-motion: reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}[data-reveal],[data-stagger]>*,.intro-item,.split-line .line-inner{opacity:1!important;transform:none!important;clip-path:none!important}.grain::before,#custom-cursor,#webgl-canvas,#loader{display:none!important}}
+    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700;900&family=Space+Mono:wght@400;700&display=swap');
+    
+    body {
+      font-family: 'Space Grotesk', sans-serif;
+    }
+    
+    .font-mono {
+      font-family: 'Space Mono', monospace;
+    }
+
+    @media (pointer: fine) {
+      body, a, button, [role="button"], [data-magnetic], input, textarea, .project-card, .interactive-btn { cursor: none !important; }
+    }
+    
+    /* Film Grain Texture overlay */
+    .grain::before {
+      content: "";
+      position: fixed;
+      top: -100%;
+      left: -100%;
+      width: 300%;
+      height: 300%;
+      background-image: url("https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=2070&auto=format&fit=crop");
+      background-repeat: repeat;
+      opacity: 0.035;
+      pointer-events: none;
+      z-index: 9999;
+      mix-blend-mode: overlay;
+    }
+
+    @keyframes marquee {
+      0% { transform: translateX(0%); }
+      100% { transform: translateX(-50%); }
+    }
+    .animate-marquee {
+      animation: marquee 35s linear infinite;
+    }
+    
+    .bx-border {
+      border-color: rgba(255, 214, 0, 0.08);
+    }
+
+    /* Scroll Reveal */
+    .reveal-section {
+      opacity: 0;
+      transform: translateY(3rem);
+      transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .reveal-section.is-revealed {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Image Treatment */
+    .project-image-container {
+      position: relative;
+      overflow: hidden;
+      background: #000;
+    }
+    .project-image-container img {
+      filter: grayscale(100%) contrast(1.15) brightness(0.6);
+      transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .project-card:hover .project-image-container img {
+      filter: grayscale(0%) contrast(1.05) brightness(0.85);
+      transform: scale(1.02);
+    }
+
+    /* Input Styling */
+    .contact-input {
+      background: transparent;
+      border-bottom: 1px solid rgba(255, 214, 0, 0.15);
+      transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      width: 100%;
+      padding: 1.2rem 0;
+      font-size: 1.25rem;
+      outline: none;
+      color: white;
+    }
+    .contact-input:focus {
+      border-color: #ffd600;
+      padding-left: 0.75rem;
+    }
+    .contact-label {
+      color: #666;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      font-weight: 800;
+      letter-spacing: 0.25em;
+      transition: color 0.3s ease;
+    }
+    .group:hover .contact-label {
+      color: #ffd600;
+    }
+
+    /* Negative Cursor Utility */
+    #cursor-bg {
+      mix-blend-mode: difference;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #050505;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #ffd600;
+      border-radius: 3px;
+    }
   </style>
 </head>
-<body class="min-h-screen bg-[#0a0a0a] text-white font-body selection:bg-brand selection:text-dark overflow-x-hidden relative grain">
-  <div id="scroll-progress" class="fixed top-0 left-0 h-[2px] w-full bg-brand z-[1200]"></div>
-  <canvas id="webgl-canvas" class="fixed top-0 left-0 w-full h-full z-[-1] pointer-events-none opacity-30"></canvas>
-  <div id="loader" class="fixed inset-0 z-[1000] bg-brand flex items-center justify-center"><h1 class="display-font text-dark text-7xl md:text-9xl tracking-[0.02em]">HARISON</h1></div>
-  <div id="custom-cursor" class="fixed top-0 left-0 pointer-events-none z-[1100]" data-mode="base"><div id="cursor-ring"></div><div id="cursor-dot"></div><div id="cursor-label"></div></div>
-  <nav class="fixed top-0 left-0 w-full p-8 md:p-14 flex justify-between items-center z-50 mix-blend-difference">
-    <a href="#hero" data-magnetic data-cursor-label="OPEN" class="focus-ring butter-link inline-block text-2xl font-extrabold tracking-tight uppercase" data-text="H."><span class="label">H.</span></a>
-    <div class="hidden md:flex gap-14 text-[10px] font-extrabold tracking-[0.3em] uppercase opacity-80">
-      <a href="#work" data-cursor-label="OPEN" data-text="Experience" class="focus-ring butter-link hover:text-brand transition-colors"><span class="label">Experience</span></a>
-      <a href="#projects" data-cursor-label="OPEN" data-text="Projects" class="focus-ring butter-link hover:text-brand transition-colors"><span class="label">Projects</span></a>
-      <a href="#contact" data-cursor-label="OPEN" data-text="Contact" class="focus-ring butter-link hover:text-brand transition-colors"><span class="label">Contact</span></a>
+
+<body class="min-h-screen bg-[#050505] text-white selection:bg-brand selection:text-dark overflow-x-hidden relative grain">
+
+  <!-- Interactive WebGL Particle Constellation Background -->
+  <canvas id="webgl-canvas" class="fixed top-0 left-0 w-full h-full z-[-1] pointer-events-none opacity-40"></canvas>
+
+  <!-- Quick Loader -->
+  <div id="loader-screen" class="fixed inset-0 z-[1000] bg-brand flex items-center justify-center animate-wipeUp pointer-events-none">
+    <div class="flex flex-col items-center animate-fadeOut">
+      <h1 class="text-dark text-6xl md:text-9xl tracking-tighter uppercase font-black">
+        Harison.
+      </h1>
+      <p class="font-mono text-dark text-xs tracking-[0.4em] uppercase mt-4">AI & Full-Stack Systems</p>
+    </div>
+  </div>
+
+  <!-- Reactive Custom Cursor -->
+  <div id="custom-cursor" class="fixed top-0 left-0 pointer-events-none z-[9999] hidden md:flex items-center justify-center">
+    <div id="cursor-ring" class="absolute rounded-full border border-brand/40 -inset-6 transition-transform duration-500 ease-out"></div>
+    <div id="cursor-bg" class="rounded-full flex items-center justify-center transition-all duration-300 w-4 h-4 bg-white"></div>
+  </div>
+
+  <!-- HEADER NAVIGATION -->
+  <nav class="fixed top-0 left-0 w-full p-6 md:p-10 flex justify-between items-center z-50 mix-blend-difference">
+    <div data-magnetic class="inline-block">
+      <a href="#" class="text-2xl font-black tracking-tighter uppercase text-white hover:text-brand transition-colors">H.S.P</a>
+    </div>
+    <div class="hidden md:flex gap-12 text-[11px] font-mono tracking-[0.3em] uppercase opacity-80">
+      <a href="#work" data-magnetic class="hover:text-brand transition-colors">Experience</a>
+      <a href="#projects" data-magnetic class="hover:text-brand transition-colors">Showcase</a>
+      <a href="#education" data-magnetic class="hover:text-brand transition-colors">Education</a>
+      <a href="#contact" data-magnetic class="hover:text-brand transition-colors">Contact</a>
+    </div>
+    <div>
+      <button onclick="toggleTerminal()" data-magnetic class="px-5 py-2.5 rounded-full border border-white/20 bg-black/50 text-[10px] font-mono tracking-widest uppercase hover:border-brand hover:text-brand transition-all flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span> Terminal
+      </button>
     </div>
   </nav>
 
   <main class="max-w-[1920px] mx-auto border-x bx-border">
-    <section id="hero" class="min-h-screen flex flex-col justify-between pt-28 pb-24 px-8 md:px-24 border-b bx-border">
-      <div class="max-w-7xl">
-        <p class="intro-item text-[10px] font-extrabold tracking-[0.35em] uppercase text-brand/90">Associate Software Developer</p>
-        <h1 class="display-font mt-10 leading-[0.78] text-[20vw] md:text-[15vw] lg:text-[13vw] uppercase">
-          <span class="split-line depth-layer block" data-depth="0.12">Harison</span>
-          <span class="split-line depth-layer block hero-ghost" data-depth="0.06">Full Stack</span>
-        </h1>
+    
+    <!-- HERO SECTION -->
+    <section class="min-h-screen flex flex-col justify-end pb-24 px-6 md:px-20 border-b bx-border relative">
+      <!-- Ambient Info Indicator -->
+      <div class="absolute top-36 right-6 md:right-20 flex flex-col items-end text-right font-mono text-[10px] tracking-widest uppercase text-muted space-y-2">
+        <div class="flex items-center gap-2">
+          <span class="w-1.5 h-1.5 rounded-full bg-brand animate-ping"></span>
+          <span class="text-white">Active Developer</span>
+        </div>
+        <div>Based in TN, India</div>
+        <div class="text-brand">spharison736@gmail.com</div>
       </div>
-      <div class="mt-20 grid grid-cols-1 md:grid-cols-12 gap-14 items-end">
-        <p id="hero-subtitle" class="intro-item md:col-span-8 text-3xl md:text-6xl font-semibold tracking-tight text-muted leading-[1.08]">Engineered dynamic UI components for a <span class="text-white">low-code and no-code HIMS SaaS platform</span> and built responsive patient portal layouts.</p>
-        <div class="md:col-span-4 flex flex-col gap-7 text-[10px] text-muted font-extrabold tracking-[0.2em] uppercase md:text-right">
-          <div class="intro-item"><p class="mb-2 opacity-40">Technical Skills</p><p class="text-brand">TypeScript, Angular 20, FastAPI, MongoDB, gRPC</p></div>
-          <div class="intro-item"><p class="mb-2 opacity-40">Currently at</p><p class="text-white">Flexilant Works</p></div>
-          <div class="intro-item"><a href="#projects" data-magnetic data-cursor-label="OPEN" class="focus-ring inline-flex items-center justify-center px-7 py-4 border border-brand/40 rounded-full text-brand hover:bg-brand hover:text-dark transition-colors">View Habit Tracker</a></div>
+
+      <div class="max-w-7xl">
+        <h1 class="text-[14vw] lg:text-[11vw] font-black leading-[0.8] tracking-tighter uppercase text-brand">HARISON S.P.</h1>
+        <h1 class="text-[14vw] lg:text-[11vw] font-black leading-[0.8] tracking-tighter uppercase opacity-15">Full Stack</h1>
+      </div>
+      
+      <div class="mt-16 grid grid-cols-1 md:grid-cols-12 gap-10 items-end">
+        <div class="md:col-span-8 text-2xl md:text-5xl font-medium tracking-tighter text-muted leading-[1.2]">
+          Building <span class="text-white border-b-2 border-brand">Low-Code Engines</span>, High-Load Architectures, and Intelligent <span class="text-white">AI-Agent Workflows</span>.
+        </div>
+        <div class="md:col-span-4 flex flex-col gap-5 text-[10px] text-muted font-mono tracking-[0.2em] uppercase md:text-right">
+          <div>
+            <p class="mb-1 opacity-40">Core Expertise</p>
+            <p class="text-brand">Angular, FastAPI, & AI Agents</p>
+          </div>
+          <div>
+            <p class="mb-1 opacity-40">Previously At</p>
+            <p class="text-white font-bold">Flexilant Works</p>
+          </div>
         </div>
       </div>
     </section>
 
-    <section id="work" class="border-b bx-border" data-reveal="up">
-      <div class="px-8 md:px-24 py-24 border-b bx-border"><h2 class="display-font text-7xl md:text-[10rem] tracking-[0.02em] uppercase leading-none">Work Experience</h2></div>
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 p-8 md:p-14" data-stagger>
-        <article class="project-card work-card tilt-card p-12 md:p-24 min-h-[680px] flex flex-col justify-between" data-tilt data-cursor-label="VIEW">
+    <!-- WORK EXPERIENCE -->
+    <section id="work" class="border-b bx-border reveal-section">
+      <div class="px-6 md:px-20 py-20 border-b bx-border">
+        <span class="text-brand font-mono text-xs tracking-widest uppercase block mb-4">// Career History</span>
+        <h2 class="text-6xl md:text-9xl font-black tracking-tighter uppercase leading-none">Experience</h2>
+      </div>
+      
+      <div class="grid grid-cols-1 lg:grid-cols-2">
+        <!-- Experience 1: Associate Software Developer -->
+        <div class="project-card group border-b lg:border-b-0 lg:border-r bx-border p-8 md:p-16 hover:bg-brand transition-all duration-1000 flex flex-col justify-between min-h-[650px]">
           <div>
-            <div class="mb-16"><span class="inline-flex px-4 py-2 rounded-full border border-brand/30 text-[10px] font-extrabold uppercase tracking-widest text-muted">2025 - Present</span></div>
-            <h3 class="display-font text-6xl md:text-8xl uppercase leading-[0.86] tracking-[0.01em] mb-7">Associate<br>Software Developer</h3><p class="text-2xl md:text-3xl text-muted font-bold mb-12">Flexilant Works</p>
-            <ul class="space-y-7 text-lg md:text-xl text-[#d8d8d8] font-medium leading-relaxed max-w-xl"><li>Engineered dynamic UI components for the Agileo.ai low-code and no-code SaaS platform, enabling customizable HIMS configuration.</li><li>Enhanced the drag-and-drop Form Designer and Page Builder using Angular 20 with configurable styling for inplace tables and custom label indicators.</li><li>Implemented advanced conditional logic with automated quantity calculation for medical inventory mapping.</li><li>Built responsive Top Bar and Box View layouts for the Patient Portal using Tailwind CSS and PrimeNG.</li></ul>
+            <div class="flex justify-between items-start mb-14">
+              <span class="font-mono text-[11px] font-bold uppercase text-muted group-hover:text-dark/60 tracking-wider transition-colors">Oct 2025 — Mar 2026</span>
+              <div class="w-12 h-12 rounded-full border border-brand/20 group-hover:border-dark/20 flex items-center justify-center transition-all">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-brand group-hover:text-dark transition-colors"><path d="M7 17L17 7M17 7H7M17 7V17"/></svg>
+              </div>
+            </div>
+            
+            <span class="text-xs font-mono group-hover:text-dark/80 text-brand block mb-2 font-bold tracking-widest uppercase">Flexilant Works</span>
+            <h3 class="text-4xl md:text-6xl font-black uppercase group-hover:text-dark transition-colors leading-none mb-8">Associate<br>Software Dev.</h3>
+            
+            <ul class="space-y-4 text-base md:text-lg text-muted group-hover:text-dark/95 font-medium leading-relaxed max-w-xl">
+              <li class="flex items-start gap-3">
+                <span class="text-brand group-hover:text-dark/70 font-bold">✓</span>
+                <span>Co-built an enterprise-scale <strong>Low-Code / No-Code SaaS Platform</strong> from scratch to construct HIMS configurations.</span>
+              </li>
+              <li class="flex items-start gap-3">
+                <span class="text-brand group-hover:text-dark/70 font-bold">✓</span>
+                <span>Designed a high-performance <strong>formula auto-calculation engine</strong> incorporated into the core form designer.</span>
+              </li>
+              <li class="flex items-start gap-3">
+                <span class="text-brand group-hover:text-dark/70 font-bold">✓</span>
+                <span>Engineered modern, performant interfaces using <strong>Angular 20 and Tailwind CSS</strong> layout mechanisms.</span>
+              </li>
+              <li class="flex items-start gap-3">
+                <span class="text-brand group-hover:text-dark/70 font-bold">✓</span>
+                <span>Created a specialized, <strong>reusable utility icon library</strong> to minimize dependencies and boost performance.</span>
+              </li>
+            </ul>
           </div>
-          <div class="mt-12 flex flex-wrap gap-4"><span class="tag-chip px-5 py-2 border bx-border rounded-full text-[10px] font-extrabold uppercase">Angular 20</span><span class="tag-chip px-5 py-2 border bx-border rounded-full text-[10px] font-extrabold uppercase">TypeScript</span><span class="tag-chip px-5 py-2 border bx-border rounded-full text-[10px] font-extrabold uppercase">Tailwind CSS</span><span class="tag-chip px-5 py-2 border bx-border rounded-full text-[10px] font-extrabold uppercase">PrimeNG</span><span class="tag-chip px-5 py-2 border bx-border rounded-full text-[10px] font-extrabold uppercase">RxJS</span></div>
-        </article>
-        <article class="project-card work-card tilt-card p-12 md:p-24 min-h-[680px] flex flex-col justify-between" data-tilt data-cursor-label="VIEW">
+          
+          <div class="mt-12 flex flex-wrap gap-2.5">
+            <span class="px-4 py-1.5 border bx-border rounded-full text-[10px] font-mono uppercase group-hover:border-dark/30 group-hover:text-dark">Angular 20</span>
+            <span class="px-4 py-1.5 border bx-border rounded-full text-[10px] font-mono uppercase group-hover:border-dark/30 group-hover:text-dark">SaaS Architecture</span>
+            <span class="px-4 py-1.5 border bx-border rounded-full text-[10px] font-mono uppercase group-hover:border-dark/30 group-hover:text-dark">Tailwind CSS</span>
+          </div>
+        </div>
+
+        <!-- Experience 2: Developer Intern -->
+        <div class="project-card group p-8 md:p-16 hover:bg-brand transition-all duration-1000 flex flex-col justify-between min-h-[650px]">
           <div>
-            <div class="mb-16"><span class="inline-flex px-4 py-2 rounded-full border border-brand/30 text-[10px] font-extrabold uppercase tracking-widest text-muted">Jun 2025 - Sep 2025</span></div>
-            <h3 class="display-font text-6xl md:text-8xl uppercase leading-[0.86] tracking-[0.01em] mb-7">Software Developer<br>Intern</h3><p class="text-2xl md:text-3xl text-muted font-bold mb-12">Flexilant Works</p>
-            <ul class="space-y-7 text-lg md:text-xl text-[#d8d8d8] font-medium leading-relaxed max-w-xl"><li>Contributed to architectural development of a multi-tenant HIMS platform with FastAPI BFF, Angular SPA, and MongoDB.</li><li>Developed the Code Set Creation module for dynamic medical lookups and XSearch functionality.</li><li>Integrated frontend components with internal Python and FastAPI services over gRPC protocols.</li></ul>
+            <div class="flex justify-between items-start mb-14">
+              <span class="font-mono text-[11px] font-bold uppercase text-muted group-hover:text-dark/60 tracking-wider transition-colors">Jun 2025 — Sep 2025</span>
+              <div class="w-12 h-12 rounded-full border border-brand/20 group-hover:border-dark/20 flex items-center justify-center transition-all">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-brand group-hover:text-dark transition-colors"><path d="M7 17L17 7M17 7H7M17 7V17"/></svg>
+              </div>
+            </div>
+            
+            <span class="text-xs font-mono group-hover:text-dark/80 text-brand block mb-2 font-bold tracking-widest uppercase">Flexilant Works</span>
+            <h3 class="text-4xl md:text-6xl font-black uppercase group-hover:text-dark transition-colors leading-none mb-8">Software Dev.<br>Internship</h3>
+            
+            <ul class="space-y-4 text-base md:text-lg text-muted group-hover:text-dark/95 font-medium leading-relaxed max-w-xl">
+              <li class="flex items-start gap-3">
+                <span class="text-brand group-hover:text-dark/70 font-bold">✓</span>
+                <span>Engineered the complete, end-to-end <strong>Codeset Creation Module</strong> utilizing Angular, FastAPI, and MongoDB.</span>
+              </li>
+              <li class="flex items-start gap-3">
+                <span class="text-brand group-hover:text-dark/70 font-bold">✓</span>
+                <span>Acquired and applied advanced patterns in modern backend architecture including <strong>BFF (Backend-For-Frontend)</strong>.</span>
+              </li>
+              <li class="flex items-start gap-3">
+                <span class="text-brand group-hover:text-dark/70 font-bold">✓</span>
+                <span>Gained robust experience with microservices structures and high-speed **gRPC communications**.</span>
+              </li>
+            </ul>
           </div>
-          <div class="mt-12 flex flex-wrap gap-4"><span class="tag-chip px-5 py-2 border bx-border rounded-full text-[10px] font-extrabold uppercase">FastAPI</span><span class="tag-chip px-5 py-2 border bx-border rounded-full text-[10px] font-extrabold uppercase">Angular</span><span class="tag-chip px-5 py-2 border bx-border rounded-full text-[10px] font-extrabold uppercase">MongoDB</span><span class="tag-chip px-5 py-2 border bx-border rounded-full text-[10px] font-extrabold uppercase">gRPC</span><span class="tag-chip px-5 py-2 border bx-border rounded-full text-[10px] font-extrabold uppercase">Docker</span><span class="tag-chip px-5 py-2 border bx-border rounded-full text-[10px] font-extrabold uppercase">Git</span></div>
-        </article>
+          
+          <div class="mt-12 flex flex-wrap gap-2.5">
+            <span class="px-4 py-1.5 border bx-border rounded-full text-[10px] font-mono uppercase group-hover:border-dark/30 group-hover:text-dark">FastAPI</span>
+            <span class="px-4 py-1.5 border bx-border rounded-full text-[10px] font-mono uppercase group-hover:border-dark/30 group-hover:text-dark">gRPC</span>
+            <span class="px-4 py-1.5 border bx-border rounded-full text-[10px] font-mono uppercase group-hover:border-dark/30 group-hover:text-dark">MongoDB</span>
+            <span class="px-4 py-1.5 border bx-border rounded-full text-[10px] font-mono uppercase group-hover:border-dark/30 group-hover:text-dark">BFF Pattern</span>
+          </div>
+        </div>
       </div>
     </section>
-    <section id="projects" class="border-b bx-border" data-reveal="down">
-      <div class="px-8 md:px-24 py-24 border-b bx-border"><h2 class="display-font text-7xl md:text-[10rem] tracking-[0.02em] uppercase leading-none text-brand">Personal Project</h2></div>
-      <div class="p-8 md:p-20 lg:p-24">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
-          <article class="lg:col-span-5 lg:sticky lg:top-24 space-y-8">
-            <p id="featured-meta" class="text-[10px] font-extrabold uppercase tracking-[0.26em] text-brand"></p>
-            <h3 id="featured-title" class="display-font text-7xl md:text-9xl uppercase leading-[0.8]"></h3>
-            <p id="featured-summary" class="text-2xl md:text-3xl text-muted leading-tight"></p>
-            <ul id="featured-points" class="space-y-5 text-lg text-[#d8d8d8] leading-relaxed"></ul>
-            <div id="featured-tags" class="flex flex-wrap gap-3 pt-4"></div>
-            <a id="featured-link" href="#" data-magnetic data-cursor-label="OPEN" class="focus-ring inline-flex items-center gap-4 px-7 py-4 border border-brand/30 rounded-full text-[10px] font-extrabold uppercase tracking-[0.24em] hover:bg-brand hover:text-dark transition-colors">Open Case Study</a>
-          </article>
-          <div class="lg:col-span-7 space-y-8">
-            <a id="featured-frame" href="#" data-tilt data-cursor-label="VIEW" class="focus-ring preview-frame tilt-card block" aria-label="Featured case study">
-              <img id="featured-media-base" src="" alt="Primary product interface preview">
-              <img id="featured-media-alt" class="preview-alt" src="" alt="Secondary product interface preview">
-              <div class="preview-sheen"></div>
-            </a>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6" data-stagger>
-              <article class="preview-mini rounded-3xl p-7" data-reveal="up" data-cursor-label="VIEW"><p class="text-[10px] uppercase tracking-[0.22em] font-extrabold text-brand mb-4">Planner Module</p><h4 class="text-2xl font-bold mb-3">Monthly, Weekly, Daily</h4><p class="text-muted leading-relaxed">Linear calendar with seamless switching between monthly, weekly, and daily planning views for optimized scheduling.</p></article>
-              <article class="preview-mini rounded-3xl p-7" data-reveal="up" data-cursor-label="VIEW"><p class="text-[10px] uppercase tracking-[0.22em] font-extrabold text-brand mb-4">Command Center</p><h4 class="text-2xl font-bold mb-3">Pomodoro and Metrics</h4><p class="text-muted leading-relaxed">Dashboard with reactive protocol filtering, built-in Pomodoro timers, and analytics for streak sequences and execution efficiency.</p></article>
+
+    <!-- SHOWCASE & INTERACTIVE PLAYGROUND -->
+    <section id="projects" class="border-b bx-border reveal-section">
+      <div class="px-6 md:px-20 py-20 border-b bx-border flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+        <div>
+          <span class="text-brand font-mono text-xs tracking-widest uppercase block mb-4">// System Engineering</span>
+          <h2 class="text-6xl md:text-9xl font-black tracking-tighter uppercase leading-none">Showcase</h2>
+        </div>
+        <p class="text-muted max-w-sm text-sm font-medium leading-relaxed">
+          Explore production-level systems and play with a simulated AI triage agent directly on the page.
+        </p>
+      </div>
+      
+      <!-- Project 1: Lifinity -->
+      <div class="project-card border-b bx-border group p-6 md:p-20 hover:bg-zinc-950/40 transition-all duration-700">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+          <div class="lg:col-span-5 flex flex-col justify-between">
+            <div>
+              <span class="text-[11px] font-mono uppercase text-brand mb-8 block tracking-wider">Product Design & SaaS // Full-Stack Application</span>
+              <h3 class="text-5xl md:text-7xl font-black uppercase leading-[0.9] mb-8 group-hover:text-brand transition-colors tracking-tighter">Lifinity</h3>
+              <p class="text-2xl text-muted font-medium mb-10 leading-snug">Performance-driven Habit Tracking and productivity dashboard.</p>
+              
+              <ul class="space-y-4 text-lg text-muted group-hover:text-white/90 font-medium leading-relaxed">
+                <li>• <strong>Modern Stack:</strong> Engineered completely from the ground up using Angular, FastAPI, and MongoDB.</li>
+                <li>• <strong>No Bloat:</strong> Custom reactive components built without heavy third-party scheduling libraries.</li>
+                <li>• <strong>Data Pipelines:</strong> Integrated seamless real-time habit updates and stream monitoring.</li>
+              </ul>
+            </div>
+            <div class="mt-12 flex flex-wrap gap-2.5">
+              <span class="px-4 py-1.5 border bx-border rounded-full text-[10px] font-mono uppercase text-muted">Angular</span>
+              <span class="px-4 py-1.5 border bx-border rounded-full text-[10px] font-mono uppercase text-muted">FastAPI</span>
+              <span class="px-4 py-1.5 border bx-border rounded-full text-[10px] font-mono uppercase text-muted">MongoDB</span>
+            </div>
+          </div>
+          
+          <div class="lg:col-span-7">
+            <div class="project-image-container rounded-3xl border border-white/5 shadow-2xl">
+              <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=2070&auto=format&fit=crop" alt="Software Engineering Interface" class="w-full h-[450px] object-cover">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project 2: AI Triage Agent with Live Playground -->
+      <div class="group p-6 md:p-20 bg-zinc-950/20">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+          <div class="lg:col-span-5 flex flex-col justify-between">
+            <div>
+              <span class="text-[11px] font-mono uppercase text-brand mb-8 block tracking-wider">AI Engineering // LangChain RAG Architecture</span>
+              <h3 class="text-5xl md:text-7xl font-black uppercase leading-[0.9] mb-8 text-brand tracking-tighter">Multi-Domain<br>Support Triage</h3>
+              <p class="text-2xl text-muted font-medium mb-8 leading-snug">RAG-driven routing agent achieving 90% routing and query answer accuracy.</p>
+              
+              <ul class="space-y-4 text-lg text-muted text-white/80 font-medium leading-relaxed">
+                <li>• <strong>Intelligent Routing:</strong> LangChain agents dynamically evaluate intent and route across knowledge bases.</li>
+                <li>• <strong>Vector Mechanics:</strong> Powered by Vector DB integrations and efficient context injection.</li>
+                <li>• <strong>High Accuracy:</strong> Configured to answer system support queries securely without halluncinations.</li>
+              </ul>
+            </div>
+            <div class="mt-12 flex flex-wrap gap-2.5">
+              <span class="px-4 py-1.5 border bx-border rounded-full text-[10px] font-mono uppercase text-muted">LangChain</span>
+              <span class="px-4 py-1.5 border bx-border rounded-full text-[10px] font-mono uppercase text-muted">Vector DB</span>
+              <span class="px-4 py-1.5 border bx-border rounded-full text-[10px] font-mono uppercase text-muted">RAG</span>
+            </div>
+          </div>
+          
+          <!-- Interactive Live Agent Demo Widget -->
+          <div class="lg:col-span-7">
+            <div class="bg-surface border bx-border rounded-3xl p-6 md:p-8 flex flex-col h-[500px] shadow-2xl relative overflow-hidden font-mono text-sm">
+              <div class="absolute inset-0 bg-[#070707] opacity-60 z-0"></div>
+              
+              <!-- Console Header -->
+              <div class="relative z-10 flex justify-between items-center pb-4 border-b bx-border mb-4">
+                <div class="flex items-center gap-2">
+                  <span class="w-3.5 h-3.5 rounded-full bg-red-500/80"></span>
+                  <span class="w-3.5 h-3.5 rounded-full bg-yellow-500/80"></span>
+                  <span class="w-3.5 h-3.5 rounded-full bg-green-500/80"></span>
+                  <span class="ml-2 text-xs text-muted">triage-agent-v1.0.sh</span>
+                </div>
+                <div class="text-[10px] text-brand uppercase tracking-wider font-bold">Interactive Node</div>
+              </div>
+
+              <!-- Message History -->
+              <div id="agent-history" class="relative z-10 flex-1 overflow-y-auto space-y-4 pr-2 mb-4 scrollbar-thin">
+                <div class="text-muted text-xs">// Multi-Domain Triage agent is operational.</div>
+                <div class="text-muted text-xs">// Vector Search indices synced. Ready for query.</div>
+                
+                <div class="flex flex-col bg-white/5 p-3 rounded-xl max-w-[85%]">
+                  <div class="text-brand text-xs mb-1 font-bold">AGENT</div>
+                  <div class="text-white">Hello! I am Harison's support triage agent. Ask me any question or test my routing efficiency using the quick prompts below!</div>
+                </div>
+              </div>
+
+              <!-- Interactive Prompt Buttons -->
+              <div class="relative z-10 grid grid-cols-1 sm:grid-cols-2 gap-2 mb-4">
+                <button onclick="sendAgentMessage('How does Harison configure multi-tenant systems?')" class="px-3 py-2 bg-white/5 hover:bg-brand/20 hover:text-white text-muted text-xs rounded-lg transition-colors text-left border border-white/5 truncate">
+                  ⚙️ Multi-tenant structures?
+                </button>
+                <button onclick="sendAgentMessage('Explain Harison\'s No-Code Engine formula builder.')" class="px-3 py-2 bg-white/5 hover:bg-brand/20 hover:text-white text-muted text-xs rounded-lg transition-colors text-left border border-white/5 truncate">
+                  🧮 Auto-calculation formula?
+                </button>
+                <button onclick="sendAgentMessage('What frameworks does he prefer for full-stack buildouts?')" class="px-3 py-2 bg-white/5 hover:bg-brand/20 hover:text-white text-muted text-xs rounded-lg transition-colors text-left border border-white/5 truncate">
+                  💻 Tech stack choice?
+                </button>
+                <button onclick="sendAgentMessage('Has Harison built APIs using FastAPI & gRPC?')" class="px-3 py-2 bg-white/5 hover:bg-brand/20 hover:text-white text-muted text-xs rounded-lg transition-colors text-left border border-white/5 truncate">
+                  🚀 FastAPI / gRPC work?
+                </button>
+              </div>
+
+              <!-- Chat Input Simulation -->
+              <div class="relative z-10 flex gap-2 pt-3 border-t bx-border">
+                <input id="agent-input" type="text" placeholder="Type a custom query to agent..." class="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-brand">
+                <button onclick="submitAgentText()" class="px-4 py-2 bg-brand text-dark font-black rounded-xl text-xs uppercase hover:bg-white transition-colors">
+                  Send
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <section id="education" class="border-b bx-border" data-reveal="up">
+    <!-- EDUCATION -->
+    <section id="education" class="border-b bx-border reveal-section">
       <div class="grid grid-cols-1 lg:grid-cols-2">
-        <div class="p-12 md:p-24 border-b lg:border-b-0 lg:border-r bx-border"><h2 class="display-font text-7xl md:text-9xl uppercase leading-none mb-16">Education</h2><div class="space-y-14"><article><p class="text-[10px] font-extrabold uppercase text-brand mb-4 tracking-widest">2021 - 2025</p><h4 class="text-4xl md:text-5xl font-bold uppercase mb-2">B.Tech EEE</h4><p class="text-2xl text-muted font-medium">Sastra University</p><p class="mt-6 inline-block bg-white/5 border border-white/10 px-6 py-2 rounded-full text-xs font-bold uppercase tracking-widest">GPA: 7.96</p></article></div></div>
-        <div class="p-12 md:p-24 grid grid-cols-1 gap-12 self-center"><article class="border-l-2 border-brand/20 pl-10 hover:border-brand transition-colors"><p class="text-[10px] font-extrabold uppercase text-muted mb-4 tracking-widest">2021</p><h4 class="text-3xl font-bold uppercase mb-2">Higher Secondary</h4><p class="text-muted font-medium text-lg">Maxwell Matriculation HSS - <span class="text-white">91.6%</span></p></article><article class="border-l-2 border-brand/20 pl-10 hover:border-brand transition-colors"><p class="text-[10px] font-extrabold uppercase text-muted mb-4 tracking-widest">2019</p><h4 class="text-3xl font-bold uppercase mb-2">Secondary</h4><p class="text-muted font-medium text-lg">Maxwell Matriculation HSS - <span class="text-white">85.6%</span></p></article></div>
-      </div>
-    </section>
-
-    <section class="border-b bx-border py-28 md:py-44 overflow-hidden hover-pause" data-reveal="down"><div class="flex animate-marquee whitespace-nowrap items-center"><div class="flex items-center gap-20 px-8" id="marquee-content"></div></div></section>
-
-    <section id="contact" class="border-b bx-border" data-reveal="up">
-      <div class="px-8 md:px-24 py-20 md:py-28 bg-[#0d0d0d]">
-        <h2 class="display-font text-7xl md:text-[9.5rem] uppercase leading-[0.8] mb-10">Contact<br><span class="text-brand">Details</span></h2>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-14">
-          <a href="mailto:spharison736@gmail.com" data-cursor-label="OPEN" class="focus-ring project-card rounded-3xl border bx-border p-8 md:p-10">
-            <p class="text-[10px] font-extrabold uppercase tracking-[0.24em] text-brand mb-3">Email</p>
-            <p class="text-xl md:text-2xl font-bold break-all">spharison736@gmail.com</p>
-          </a>
-          <a href="tel:7871160344" data-cursor-label="OPEN" class="focus-ring project-card rounded-3xl border bx-border p-8 md:p-10">
-            <p class="text-[10px] font-extrabold uppercase tracking-[0.24em] text-brand mb-3">Phone</p>
-            <p class="text-xl md:text-2xl font-bold">787-116-0344</p>
-          </a>
-          <a href="https://linkedin.com/in/harison-s-p" data-cursor-label="OPEN" class="focus-ring project-card rounded-3xl border bx-border p-8 md:p-10">
-            <p class="text-[10px] font-extrabold uppercase tracking-[0.24em] text-brand mb-3">LinkedIn</p>
-            <p class="text-xl md:text-2xl font-bold">linkedin.com/in/harison-s-p</p>
-          </a>
+        <div class="p-8 md:p-16 border-b lg:border-b-0 lg:border-r bx-border">
+          <span class="text-brand font-mono text-xs tracking-widest uppercase block mb-4">// Foundation</span>
+          <h2 class="text-6xl md:text-9xl font-black uppercase leading-none mb-14">Edu<br>cation</h2>
+          
+          <div class="space-y-16">
+            <div class="group border-l-2 border-brand/20 pl-6 hover:border-brand transition-colors">
+              <p class="font-mono text-xs uppercase text-brand mb-2 tracking-widest">Sep 2021 — May 2025</p>
+              <h4 class="text-3xl md:text-4xl font-bold uppercase mb-1">B.Tech EEE</h4>
+              <p class="text-xl text-muted font-medium mb-4">Sastra University</p>
+              <div class="flex flex-wrap gap-2">
+                <span class="bg-white/5 border border-white/10 px-4 py-1.5 rounded-full text-xs font-mono uppercase text-brand">GPA: 7.96 / 10</span>
+                <span class="bg-white/5 border border-white/10 px-4 py-1.5 rounded-full text-xs font-mono uppercase text-white/60">Embedded Systems</span>
+                <span class="bg-white/5 border border-white/10 px-4 py-1.5 rounded-full text-xs font-mono uppercase text-white/60">Programming Fundamentals</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="p-8 md:p-16 grid grid-cols-1 gap-12 self-center">
+          <div class="group border-l-2 border-brand/20 pl-8 hover:border-brand transition-colors">
+            <p class="font-mono text-xs uppercase text-muted mb-2 tracking-widest">Aug 2020 — Jun 2021</p>
+            <h4 class="text-2xl font-bold uppercase mb-1">Higher Secondary (Class XII)</h4>
+            <p class="text-muted font-medium text-lg">Maxwell Matriculation HSS — <span class="text-brand font-mono font-bold">91.6%</span></p>
+          </div>
+          
+          <div class="group border-l-2 border-brand/20 pl-8 hover:border-brand transition-colors">
+            <p class="font-mono text-xs uppercase text-muted mb-2 tracking-widest">Aug 2018 — July 2019</p>
+            <h4 class="text-2xl font-bold uppercase mb-1">Secondary (Class X)</h4>
+            <p class="text-muted font-medium text-lg">Maxwell Matriculation Secondary School — <span class="text-brand font-mono font-bold">86.6%</span></p>
+          </div>
         </div>
       </div>
     </section>
 
-    <footer class="p-12 md:p-20 flex flex-col md:flex-row justify-between items-center text-[10px] font-extrabold uppercase tracking-[0.34em] text-muted opacity-60"><div>&copy; 2026 Harison S.P.</div><div class="flex gap-12 mt-10 md:mt-0"><a href="https://linkedin.com/in/harison-s-p" data-cursor-label="OPEN" class="focus-ring hover:text-white transition-colors">LinkedIn</a><a href="#hero" data-cursor-label="OPEN" class="focus-ring hover:text-white transition-colors">Top</a></div></footer>
+    <!-- EXPANDED TECH MARQUEE -->
+    <section class="border-b bx-border py-24 md:py-40 overflow-hidden hover-pause reveal-section">
+      <div class="flex animate-marquee whitespace-nowrap items-center">
+        <div class="flex items-center gap-16 px-6" id="marquee-content"></div>
+      </div>
+    </section>
+
+    <!-- CONTACT FORM & CHANNELS -->
+    <section id="contact" class="reveal-section border-b bx-border">
+      <div class="grid grid-cols-1 lg:grid-cols-2">
+        <div class="p-8 md:p-16 border-b lg:border-b-0 lg:border-r bx-border bg-[#080808]">
+          <span class="text-brand font-mono text-xs tracking-widest uppercase block mb-4">// Get In Touch</span>
+          <h2 class="text-6xl md:text-9xl font-black uppercase leading-[0.85] mb-12">Let's<br><span class="text-brand">Chat.</span></h2>
+          
+          <div class="space-y-8 mt-16 font-mono">
+            <div>
+              <p class="text-[10px] uppercase text-muted tracking-widest mb-1">Direct Line</p>
+              <a href="tel:+17871160344" class="text-xl md:text-3xl font-bold hover:text-brand transition-colors">+1 787-116-0344</a>
+            </div>
+            <div>
+              <p class="text-[10px] uppercase text-muted tracking-widest mb-1">Email Endpoint</p>
+              <a href="mailto:spharison736@gmail.com" class="text-xl md:text-3xl font-bold hover:text-brand transition-colors">spharison736@gmail.com</a>
+            </div>
+            <div>
+              <p class="text-[10px] uppercase text-muted tracking-widest mb-1">Collaboration</p>
+              <p class="text-muted text-sm max-w-xs leading-relaxed font-medium font-sans">
+                Available for enterprise system development, consulting, and full-stack engineering roles.
+              </p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Interactive Contact Form with Success Feedback Modal -->
+        <div class="p-8 md:p-16 bg-[#050505] flex flex-col justify-center">
+          <form id="portfolio-contact-form" onsubmit="handleFormSubmit(event)" class="space-y-12">
+            <div class="relative group">
+              <label class="contact-label">Identification</label>
+              <input type="text" required class="contact-input" placeholder="What is your name?">
+            </div>
+            <div class="relative group">
+              <label class="contact-label">Contact Path</label>
+              <input type="email" required class="contact-input" placeholder="email@address.com">
+            </div>
+            <div class="relative group">
+              <label class="contact-label">The Vision / Challenge</label>
+              <textarea rows="2" required class="contact-input" placeholder="Brief system overview or role info..."></textarea>
+            </div>
+            
+            <button type="submit" data-magnetic class="group relative inline-flex items-center justify-center py-8 px-16 bg-brand rounded-full text-dark font-black uppercase text-[10px] tracking-[0.3em] overflow-hidden transition-all hover:scale-105 active:scale-95">
+              <span class="relative z-10 text-dark">Initialize Connection</span>
+              <div class="absolute inset-0 bg-white translate-y-full group-hover:translate-y-0 transition-transform duration-500"></div>
+            </button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- PORTFOLIO FOOTER -->
+    <footer class="p-8 md:p-14 flex flex-col md:flex-row justify-between items-center text-[10px] font-mono tracking-[0.4em] text-muted opacity-50 gap-6">
+      <div>&copy; 2026 HARISON S.P. // ALL RIGHTS RESERVED</div>
+      <div class="flex gap-12">
+        <a href="https://linkedin.com/in/harison-s-p" target="_blank" data-magnetic class="hover:text-brand transition-colors">LinkedIn</a>
+        <button onclick="toggleTerminal()" data-magnetic class="hover:text-brand transition-colors uppercase">Open Terminal</button>
+      </div>
+    </footer>
+
   </main>
 
+  <!-- INTERACTIVE TERMINAL WINDOW (MODAL HUD Overlay) -->
+  <div id="terminal-modal" class="fixed inset-0 bg-black/95 z-[999] hidden items-center justify-center p-4 backdrop-blur-md">
+    <div class="bg-surface border-2 border-brand/30 rounded-2xl w-full max-w-3xl h-[550px] flex flex-col overflow-hidden font-mono text-xs md:text-sm shadow-[0_0_50px_rgba(255,214,0,0.15)]">
+      
+      <!-- Top Bar -->
+      <div class="bg-[#050505] p-4 flex justify-between items-center border-b border-brand/10">
+        <div class="flex items-center gap-2">
+          <span class="w-3.5 h-3.5 rounded-full bg-red-500/80 hover:bg-red-600 transition-colors cursor-pointer" onclick="toggleTerminal()"></span>
+          <span class="text-white font-bold">Harison@Core-Terminal: ~</span>
+        </div>
+        <div class="text-[10px] text-brand uppercase tracking-widest animate-pulse font-bold">Interactive Mode</div>
+      </div>
+
+      <!-- Content Terminal Area -->
+      <div id="terminal-screen" class="flex-1 p-6 overflow-y-auto space-y-4 text-white scrollbar-thin">
+        <div>
+          <span class="text-brand">Welcome to Harison's System Console v2.0.0</span><br>
+          <span class="text-muted">Type <span class="text-white font-bold">'help'</span> to see available portfolio commands.</span>
+        </div>
+      </div>
+
+      <!-- Bottom Interactive Command Input -->
+      <div class="bg-[#030303] p-4 border-t border-brand/10 flex items-center gap-2">
+        <span class="text-brand font-bold">H.S.P:~$</span>
+        <input id="terminal-input" type="text" placeholder="type a command..." onkeydown="handleTerminalCommand(event)" class="flex-1 bg-transparent text-white outline-none focus:ring-0">
+        <span class="text-muted text-[10px] hidden md:inline">Press ENTER to execute</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- CUSTOM FEEDBACK POPUP DIALOG -->
+  <div id="feedback-dialog" class="fixed inset-0 z-[1000] bg-black/80 backdrop-blur-md hidden items-center justify-center p-4">
+    <div class="bg-surface border-2 border-brand rounded-2xl p-8 max-w-md w-full text-center space-y-6 shadow-2xl">
+      <div class="w-16 h-16 rounded-full bg-brand/15 text-brand flex items-center justify-center mx-auto">
+        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <div>
+        <h3 class="text-2xl font-black uppercase text-white mb-2">Connection Initiated!</h3>
+        <p class="text-muted text-sm font-medium">Thank you for reaching out. Harison S.P. will analyze your request and connect back shortly.</p>
+      </div>
+      <button onclick="closeFeedback()" class="w-full py-3 bg-brand hover:bg-white text-dark font-black uppercase text-xs tracking-widest rounded-xl transition-colors">
+        Dismiss Interface
+      </button>
+    </div>
+  </div>
+
+
+  <!-- SCRIPTS -->
   <script>
-    const MOTION=Object.freeze({duration:{fast:320,medium:760,slow:1200},ease:{standard:'cubic-bezier(0.22, 1, 0.36, 1)',snap:'cubic-bezier(0.18, 0.89, 0.32, 1.28)'},stagger:90,hoverStrength:0.32,scrollDamping:0.12});
-    const prefersReducedMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const finePointer=window.matchMedia('(pointer: fine)').matches;
-    const featuredProject={meta:'Personal Project',title:'Habit Tracker',summary:'Productivity and planning application built with Angular 20 and Signals for highly performant reactive state management.',points:['Developed a planner module with monthly, weekly, and daily planning views.','Architected a System feature to execute and track long-term goals integrated into weekly and daily planners.','Built a Command Center dashboard with reactive filtering, Pomodoro timers, and analytics metrics.','Designed a responsive UI architecture using Tailwind CSS utility classes.'],tags:['Angular 20','TypeScript','Tailwind CSS','Angular Signals','Client-Side Data Parsing'],link:'#',media:{base:'https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=2080&auto=format&fit=crop',alt:'https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=2070&auto=format&fit=crop'}};
-    function renderFeaturedProject(p){
-      document.getElementById('featured-meta').textContent=p.meta;
-      document.getElementById('featured-title').textContent=p.title;
-      document.getElementById('featured-summary').textContent=p.summary;
-      document.getElementById('featured-points').innerHTML=p.points.map(x=>'<li>'+x+'</li>').join('');
-      document.getElementById('featured-tags').innerHTML=p.tags.map(t=>"<span class='tag-chip px-4 py-2 border bx-border rounded-full text-[10px] font-extrabold uppercase tracking-[0.16em]'>"+t+"</span>").join('');
-      document.getElementById('featured-link').href=p.link;document.getElementById('featured-frame').href=p.link;
-      document.getElementById('featured-media-base').src=p.media.base;document.getElementById('featured-media-alt').src=p.media.alt;
-    }
-    renderFeaturedProject(featuredProject);
+    // 1. Marquee Population & Expansion from Resume Skills
+    const techStack = [
+      "TypeScript", "Angular 20", "FastAPI", "MongoDB", "Python", 
+      "RxJS", "Signals", "gRPC", "Docker", "Node.js", "PostgreSQL", 
+      "LangChain", "Vector DB", "RAG Pipeline", "BFF Microservices", "Antigravity IDE", "Windsurf"
+    ];
+    const marquee = document.getElementById('marquee-content');
+    [...techStack, ...techStack].forEach(tech => {
+      const div = document.createElement('div');
+      div.className = 'flex items-center gap-16';
+      div.innerHTML = `
+        <span class="text-6xl md:text-8xl font-black uppercase tracking-tighter text-brand hover:text-white transition-colors cursor-default">${tech}</span>
+        <span class="text-3xl text-brand/20 font-mono">/</span>
+      `;
+      marquee.appendChild(div);
+    });
 
-    const techStack=['TypeScript','JavaScript','Python','HTML5','CSS3','Angular 18/20','PrimeNG','FastAPI','MongoDB','gRPC','Tailwind CSS','Angular Signals','RxJS','Git','Docker','Jira','REST APIs'];
-    const marquee=document.getElementById('marquee-content'); [...techStack,...techStack].forEach(tech=>{const node=document.createElement('div'); node.className='flex items-center gap-20'; node.innerHTML="<span class='display-font text-[12vw] md:text-[8.5rem] uppercase text-brand hover:text-white transition-colors'>"+tech+"</span><span class='text-5xl text-muted/30'>/</span>"; marquee.appendChild(node);});
+    // 2. Custom Cursor Tracking
+    const cursor = document.getElementById('custom-cursor');
+    const ring = document.getElementById('cursor-ring');
+    const dot = document.getElementById('cursor-bg');
+    let mX = 0, mY = 0, cX = 0, cY = 0;
 
-    function prepareSplitLines(){document.querySelectorAll('.split-line').forEach(line=>{if(line.dataset.ready==='true')return; const text=line.textContent.trim(); line.innerHTML="<span class='line-inner'>"+text+"</span>"; line.dataset.ready='true';});}
-    function playIntro(){const intro=[...document.querySelectorAll('.intro-item')]; const lines=[...document.querySelectorAll('.split-line')]; lines.forEach((l,i)=>setTimeout(()=>l.classList.add('is-visible'),180+i*MOTION.stagger)); intro.forEach((it,i)=>setTimeout(()=>it.classList.add('is-visible'),420+i*MOTION.stagger));}
-    function markLoaded(){document.body.classList.add('is-loaded'); if(finePointer&&!prefersReducedMotion)document.body.classList.add('cursor-enabled');}
+    window.addEventListener('mousemove', e => {
+      mX = e.clientX; mY = e.clientY;
+      cursor.classList.remove('hidden');
+    });
 
-    function initProgress(){
-      const update=()=>{const max=document.documentElement.scrollHeight-window.innerHeight; const ratio=max>0?window.scrollY/max:0; document.documentElement.style.setProperty('--progress',String(Math.min(1,Math.max(0,ratio))));};
-      update(); let ticking=false; window.addEventListener('scroll',()=>{if(ticking)return; ticking=true; requestAnimationFrame(()=>{update(); ticking=false;});},{passive:true}); window.addEventListener('resize',update);
-    }
+    const updateCursor = () => {
+      cX += (mX - cX) * 0.15;
+      cY += (mY - cY) * 0.15;
+      cursor.style.transform = `translate3d(${cX}px, ${cY}px, 0) translate3d(-50%, -50%, 0)`;
+      requestAnimationFrame(updateCursor);
+    };
+    updateCursor();
 
-    function initReveal(){
-      const targets=document.querySelectorAll('[data-reveal]'); const reveal=(el)=>{el.classList.add('is-revealed'); const block=el.querySelector('[data-stagger]'); if(block){[...block.children].forEach((c,i)=>c.style.transitionDelay=(i*MOTION.stagger)+'ms'); block.classList.add('is-staggered');}};
-      if(prefersReducedMotion){targets.forEach(reveal); return;}
-      const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(!e.isIntersecting)return; reveal(e.target); obs.unobserve(e.target);});},{threshold:.14}); targets.forEach(t=>obs.observe(t));
-    }
+    window.addEventListener('mouseover', e => {
+      const isClickable = e.target.closest('a, button, input, textarea, [data-magnetic]');
+      const isProjectCard = e.target.closest('.project-card');
+      
+      if (isProjectCard || isClickable) {
+        dot.className = "w-12 h-12 bg-white rounded-full transition-all duration-300";
+        ring.style.transform = "scale(1.4)";
+        ring.style.opacity = "0.15";
+      } else {
+        dot.className = "w-4 h-4 bg-white rounded-full transition-all duration-300";
+        ring.style.transform = "scale(1)";
+        ring.style.opacity = "0.4";
+      }
+    });
 
-    function initHeroParallax(){
-      if(prefersReducedMotion||!finePointer)return; const hero=document.getElementById('hero'); const layers=hero.querySelectorAll('.depth-layer'); let frame=null,px=0,py=0;
-      hero.addEventListener('pointermove',e=>{const r=hero.getBoundingClientRect(); px=((e.clientX-r.left)/r.width)*2-1; py=((e.clientY-r.top)/r.height)*2-1; if(frame)return; frame=requestAnimationFrame(()=>{layers.forEach(layer=>{const d=Number(layer.dataset.depth||0.05); layer.style.transform='translate3d('+(px*24*d).toFixed(2)+'px,'+(py*18*d).toFixed(2)+'px,0)';}); frame=null;});});
-      hero.addEventListener('pointerleave',()=>layers.forEach(layer=>layer.style.transform='translate3d(0,0,0)'));
-    }
-
-    function initCursor(){
-      const cursor=document.getElementById('custom-cursor'), label=document.getElementById('cursor-label'); if(!finePointer||prefersReducedMotion){cursor.style.display='none'; return;}
-      let mx=window.innerWidth/2,my=window.innerHeight/2,cx=mx,cy=my; (function tick(){cx+=(mx-cx)*0.2; cy+=(my-cy)*0.2; cursor.style.transform='translate3d('+cx+'px,'+cy+'px,0)'; requestAnimationFrame(tick);})();
-      window.addEventListener('mousemove',e=>{mx=e.clientX; my=e.clientY;});
-      const apply=(target)=>{const host=target?target.closest('[data-cursor-label],a,button,input,textarea,[data-tilt]'):null; let text='',mode='base'; if(host){text=host.dataset.cursorLabel||(host.matches('a,button')?'OPEN':'VIEW'); mode=text.toLowerCase(); if(!['base','open','view','drag'].includes(mode))mode='view';} cursor.dataset.mode=mode; label.textContent=text; cursor.classList.toggle('has-label',Boolean(text)); cursor.classList.toggle('is-hovering',Boolean(host));};
-      document.addEventListener('mouseover',e=>apply(e.target)); document.addEventListener('mouseleave',()=>apply(null));
-    }
-
-    function initMagnetic(){if(prefersReducedMotion||!finePointer)return; document.querySelectorAll('[data-magnetic]').forEach(el=>{el.addEventListener('mousemove',e=>{const r=el.getBoundingClientRect(); const x=e.clientX-r.left-r.width/2; const y=e.clientY-r.top-r.height/2; el.style.transform='translate3d('+(x*MOTION.hoverStrength).toFixed(2)+'px,'+(y*MOTION.hoverStrength).toFixed(2)+'px,0)'; el.style.transition='transform 80ms linear';}); el.addEventListener('mouseleave',()=>{el.style.transform='translate3d(0,0,0)'; el.style.transition='transform 620ms '+MOTION.ease.standard;});});}
-
-    function initTilt(){if(prefersReducedMotion||!finePointer)return; document.querySelectorAll('[data-tilt]').forEach(card=>{card.addEventListener('pointermove',e=>{const r=card.getBoundingClientRect(); const x=(e.clientX-r.left)/r.width; const y=(e.clientY-r.top)/r.height; card.style.setProperty('--rx',((0.5-y)*8).toFixed(2)+'deg'); card.style.setProperty('--ry',((x-0.5)*9).toFixed(2)+'deg');}); card.addEventListener('pointerleave',()=>{card.style.setProperty('--rx','0deg'); card.style.setProperty('--ry','0deg');});});}
-
-    function initHoverSpotlight(){
-      if(prefersReducedMotion||!finePointer)return;
-      document.querySelectorAll('.project-card').forEach(card=>{
-        card.addEventListener('pointermove',e=>{
-          const r=card.getBoundingClientRect();
-          card.style.setProperty('--mx',(e.clientX-r.left)+'px');
-          card.style.setProperty('--my',(e.clientY-r.top)+'px');
-        });
+    // 3. Magnetic Hover Interaction
+    const magnets = document.querySelectorAll('[data-magnetic]');
+    magnets.forEach(el => {
+      el.addEventListener('mousemove', e => {
+        const r = el.getBoundingClientRect();
+        const x = (e.clientX - r.left - r.width/2) * 0.45;
+        const y = (e.clientY - r.top - r.height/2) * 0.45;
+        el.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+        el.style.transition = "transform 0.08s linear";
       });
+      el.addEventListener('mouseleave', () => {
+        el.style.transform = `translate3d(0,0,0)`;
+        el.style.transition = "transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)";
+      });
+    });
+
+    // 4. Reveal Observer for Smooth Animation
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if(e.isIntersecting) {
+          e.target.classList.add('is-revealed');
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal-section').forEach(el => observer.observe(el));
+
+    // 5. 3D Background - Dynamic Particle Constellation
+    let scene, camera, renderer, particles;
+    let particlePositions = [];
+    let particleVelocity = [];
+    const maxParticles = 450;
+    const connectionDistance = 85;
+
+    window.addEventListener('load', () => {
+      const canvasEl = document.getElementById('webgl-canvas');
+      scene = new THREE.Scene();
+      camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 0.1, 1000);
+      camera.position.z = 250;
+
+      renderer = new THREE.WebGLRenderer({ canvas: canvasEl, alpha: true, antialias: true });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+      // Construct Particle Geometry
+      const geometry = new THREE.BufferGeometry();
+      const positions = new Float32Array(maxParticles * 3);
+      
+      for(let i = 0; i < maxParticles; i++) {
+        const x = (Math.random() - 0.5) * 500;
+        const y = (Math.random() - 0.5) * 500;
+        const z = (Math.random() - 0.5) * 500;
+
+        positions[i*3] = x;
+        positions[i*3+1] = y;
+        positions[i*3+2] = z;
+
+        particleVelocity.push({
+          x: (Math.random() - 0.5) * 0.3,
+          y: (Math.random() - 0.5) * 0.3,
+          z: (Math.random() - 0.5) * 0.3
+        });
+      }
+
+      geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+      // Stylized glow point material
+      const material = new THREE.PointsMaterial({
+        color: 0xffd600,
+        size: 2.2,
+        transparent: true,
+        opacity: 0.85,
+        blending: THREE.AdditiveBlending
+      });
+
+      particles = new THREE.Points(geometry, material);
+      scene.add(particles);
+
+      // Mouse Parallax Trackers
+      let targetX = 0, targetY = 0;
+      window.addEventListener('mousemove', (e) => {
+        targetX = (e.clientX - window.innerWidth / 2) * 0.04;
+        targetY = (e.clientY - window.innerHeight / 2) * 0.04;
+      });
+
+      const animate = () => {
+        const positionsArr = particles.geometry.attributes.position.array;
+
+        // Move individual particles
+        for(let i = 0; i < maxParticles; i++) {
+          positionsArr[i*3] += particleVelocity[i].x;
+          positionsArr[i*3+1] += particleVelocity[i].y;
+          positionsArr[i*3+2] += particleVelocity[i].z;
+
+          // Boundary bounce
+          if (Math.abs(positionsArr[i*3]) > 250) particleVelocity[i].x *= -1;
+          if (Math.abs(positionsArr[i*3+1]) > 250) particleVelocity[i].y *= -1;
+          if (Math.abs(positionsArr[i*3+2]) > 250) particleVelocity[i].z *= -1;
+        }
+
+        particles.geometry.attributes.position.needsUpdate = true;
+
+        // Smooth Camera Parallax Sway
+        camera.position.x += (targetX - camera.position.x) * 0.05;
+        camera.position.y += (-targetY - camera.position.y) * 0.05;
+        camera.lookAt(scene.position);
+
+        // Constant orbit rotation
+        particles.rotation.y += 0.0006;
+        particles.rotation.x += 0.0003;
+
+        renderer.render(scene, camera);
+        requestAnimationFrame(animate);
+      };
+      
+      animate();
+
+      window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth/window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      });
+    });
+
+    // 6. Support AI Agent Simulation Logic
+    const qaPairs = {
+      "how does harison configure multi-tenant systems?": "Harison specializes in strict tenant separation. In his experience at Flexilant, he optimized data models to separate multi-tenant structures cleanly and configured complex dynamic UI layouts powered by single-source design configurations.",
+      "explain harison's no-code engine formula builder.": "At Flexilant, Harison designed a robust formula-based auto-calculation architecture into the Angular form designer module. It allowed clinical users to enter spreadsheet-like formulas that compile instantly to compute scores dynamically at runtime.",
+      "what frameworks does he prefer for full-stack buildouts?": "Harison thrives on Angular 20 (leveraging modern Signals) and Tailwind CSS on the frontend, and FastAPI with Python, MongoDB, PostgreSQL, or REST architectures on the backend.",
+      "has harison built apis using fastapi & grpc?": "Yes, during his Flexilant tenure, Harison engineered clean REST APIs with FastAPI, designed multi-tenant medical schemas on MongoDB, and coordinated high-efficiency BFF gRPC microservice routing pipelines.",
+      "default": "Routing Agent Decision: [Knowledge Base Query Routing]. I appreciate your query. Harison is thoroughly experienced in full stack applications and AI pipelines. Drop him a message using the form below to dive deeper!"
+    };
+
+    function sendAgentMessage(text) {
+      const history = document.getElementById('agent-history');
+      
+      // Print User Message
+      const userDiv = document.createElement('div');
+      userDiv.className = 'flex flex-col bg-white/10 p-3 rounded-xl max-w-[85%] ml-auto text-right';
+      userDiv.innerHTML = `
+        <div class="text-white/60 text-[10px] mb-1 uppercase font-bold font-mono">YOU</div>
+        <div class="text-white font-mono text-sm">${text}</div>
+      `;
+      history.appendChild(userDiv);
+      history.scrollTop = history.scrollHeight;
+
+      // Simulated agent thinking
+      setTimeout(() => {
+        const normalized = text.toLowerCase().trim();
+        let answer = qaPairs[normalized] || qaPairs["default"];
+
+        const agentDiv = document.createElement('div');
+        agentDiv.className = 'flex flex-col bg-brand/10 border border-brand/20 p-3 rounded-xl max-w-[85%]';
+        agentDiv.innerHTML = `
+          <div class="text-brand text-[10px] mb-1 font-bold font-mono">⚡ AGENT ROUTED RESPONSE</div>
+          <div class="text-white font-mono text-xs leading-relaxed" id="typing-span-${Date.now()}"></div>
+        `;
+        history.appendChild(agentDiv);
+        history.scrollTop = history.scrollHeight;
+
+        // Animate typewriter response
+        const targetSpan = agentDiv.querySelector('[id^="typing-span-"]');
+        let index = 0;
+        const interval = setInterval(() => {
+          targetSpan.innerHTML += answer.charAt(index);
+          index++;
+          history.scrollTop = history.scrollHeight;
+          if (index >= answer.length) {
+            clearInterval(interval);
+          }
+        }, 12);
+
+      }, 600);
     }
 
-    function initContact(){const form=document.getElementById('contact-form'), status=document.getElementById('form-status'), submit=document.getElementById('contact-submit'), ripple=submit?submit.querySelector('.btn-ripple'):null; if(!form||!status||!submit||!ripple)return; submit.addEventListener('pointerdown',e=>{const r=submit.getBoundingClientRect(); ripple.style.left=(e.clientX-r.left)+'px'; ripple.style.top=(e.clientY-r.top)+'px'; ripple.classList.remove('is-active'); requestAnimationFrame(()=>ripple.classList.add('is-active'));}); form.addEventListener('submit',e=>{e.preventDefault(); status.textContent='Message staged. I will get back via email.'; status.classList.add('is-visible'); submit.setAttribute('aria-label','Message staged');});}
+    function submitAgentText() {
+      const input = document.getElementById('agent-input');
+      if (input.value.trim() !== '') {
+        sendAgentMessage(input.value);
+        input.value = '';
+      }
+    }
 
-    function initWebgl(){const canvas=document.getElementById('webgl-canvas'); if(prefersReducedMotion||window.innerWidth<900||!window.THREE){canvas.style.display='none'; return;} const scene=new THREE.Scene(); const camera=new THREE.PerspectiveCamera(72,window.innerWidth/window.innerHeight,0.1,1000); const renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:true}); renderer.setSize(window.innerWidth,window.innerHeight); renderer.setPixelRatio(Math.min(window.devicePixelRatio,1.5)); const geo=new THREE.TorusKnotGeometry(12,3,160,24); const mat=new THREE.MeshBasicMaterial({color:0xffd600,wireframe:true,transparent:true,opacity:.085}); const mesh=new THREE.Mesh(geo,mat); scene.add(mesh); camera.position.z=40; let target=0; window.addEventListener('scroll',()=>{target=window.scrollY*0.0014;},{passive:true}); (function animate(){mesh.rotation.x+=0.0006; mesh.rotation.y+=0.001+(target-mesh.rotation.y)*(MOTION.scrollDamping*0.02); renderer.render(scene,camera); requestAnimationFrame(animate);})(); window.addEventListener('resize',()=>{camera.aspect=window.innerWidth/window.innerHeight; camera.updateProjectionMatrix(); renderer.setSize(window.innerWidth,window.innerHeight);});}
+    // 7. Interactive Terminal overlay Logic
+    const terminalModal = document.getElementById('terminal-modal');
+    const terminalScreen = document.getElementById('terminal-screen');
+    const terminalInput = document.getElementById('terminal-input');
 
-    prepareSplitLines(); initProgress(); initReveal(); initHeroParallax(); initCursor(); initMagnetic(); initTilt(); initHoverSpotlight(); initContact(); initWebgl();
-    window.addEventListener('load',()=>{if(prefersReducedMotion){document.body.classList.add('is-loaded'); document.querySelectorAll('.split-line,.intro-item').forEach(el=>el.classList.add('is-visible')); return;} setTimeout(markLoaded,720); setTimeout(playIntro,260);});
+    function toggleTerminal() {
+      if (terminalModal.classList.contains('hidden')) {
+        terminalModal.classList.remove('hidden');
+        terminalModal.classList.add('flex');
+        terminalInput.focus();
+      } else {
+        terminalModal.classList.remove('flex');
+        terminalModal.classList.add('hidden');
+      }
+    }
+
+    function writeTerminalLine(text, color = "text-white") {
+      const line = document.createElement('div');
+      line.className = `${color} leading-relaxed`;
+      line.innerHTML = text;
+      terminalScreen.appendChild(line);
+      terminalScreen.scrollTop = terminalScreen.scrollHeight;
+    }
+
+    function handleTerminalCommand(e) {
+      if (e.key === 'Enter') {
+        const cmd = terminalInput.value.trim().toLowerCase();
+        terminalInput.value = '';
+
+        writeTerminalLine(`<span class="text-brand">H.S.P:~$</span> ${cmd}`);
+
+        if (cmd === '') return;
+
+        switch(cmd) {
+          case 'help':
+            writeTerminalLine(`Available commands:
+  - <span class="text-brand">about</span>   : Learn more about Harison.
+  - <span class="text-brand">skills</span>  : Output technical qualifications.
+  - <span class="text-brand">experience</span> : Print production history.
+  - <span class="text-brand">contact</span> : Show direct contact metrics.
+  - <span class="text-brand">clear</span>   : Clean console buffer.`);
+            break;
+          case 'about':
+            writeTerminalLine(`Harison S.P. is a certified AI-Full-Stack Engineer with 10+ months of specialized development building scalable, reliable low-code systems. Fluent in TypeScript and Python.`);
+            break;
+          case 'skills':
+            writeTerminalLine(`LANGUAGES   : TypeScript, JavaScript, Python, HTML5, CSS3
+FRAMEWORKS  : Angular, FastAPI, Node, LangChain, VectorDB, Tailwind CSS
+DATABASES   : MongoDB, PostgreSQL, SQL, MySQL, GraphQL
+DOCKER      : Native container virtualization and build automation.`);
+            break;
+          case 'experience':
+            writeTerminalLine(`- Associate Software Developer @ Flexilant Works (Oct 2025 - Mar 2026)
+  Constructed No-Code core logic, high speed calculations, and multi-tenant UI rules.
+- Software Developer Intern @ Flexilant Works (Jun 2025 - Sep 2025)
+  Developed Codeset Creation and gRPC-based BFF architectures.`);
+            break;
+          case 'contact':
+            writeTerminalLine(`Phone     : 787-116-0344
+Email     : spharison736@gmail.com
+LinkedIn  : linkedin.com/in/harison-s-p`);
+            break;
+          case 'clear':
+            terminalScreen.innerHTML = '<div>Console cleared. Type <span class="text-brand">help</span> for guidelines.</div>';
+            break;
+          default:
+            writeTerminalLine(`Command not found: '${cmd}'. Type <span class="text-brand">help</span> for options.`, "text-red-500");
+        }
+      }
+    }
+
+    // 8. Contact Form Success Modals
+    const feedbackDialog = document.getElementById('feedback-dialog');
+
+    function handleFormSubmit(e) {
+      e.preventDefault();
+      feedbackDialog.classList.remove('hidden');
+      feedbackDialog.classList.add('flex');
+      e.target.reset();
+    }
+
+    function closeFeedback() {
+      feedbackDialog.classList.remove('flex');
+      feedbackDialog.classList.add('hidden');
+    }
   </script>
 </body>
 </html>
